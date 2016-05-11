@@ -1,6 +1,17 @@
 module.exports = function(grunt) {
 
   grunt.initConfig({
+    coffee: {
+      application: {
+        files: {
+          'application.js': 'src/**/*.coffee'
+        },
+        options: {
+          bare: true
+        }
+      }
+    },
+
     connect: {
       server: {
         options: {
@@ -10,35 +21,31 @@ module.exports = function(grunt) {
     },
 
     jshint: {
-      files: ['src/**/*.js']
+      files: 'application.js'
     },
 
     uglify: {
       application: {
-        dest: 'application.js',
-        src: ['src/**/*.js']
-      },
-      options: {
-        beautify: true,
-        compress: false,
-        mangle: false
-      },
+        dest: 'application.min.js',
+        src: 'application.js'
+      }
     },
 
     watch: {
       scripts: {
-        files: ['src/**/*.js'],
-        tasks: ['jshint', 'uglify']
+        files: ['src/**/*.coffee'],
+        tasks: ['coffee', 'jshint', 'uglify']
       },
     }
   });
 
+  grunt.loadNpmTasks('grunt-contrib-coffee');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
-  grunt.registerTask('default', ['jshint', 'uglify']);
+  grunt.registerTask('default', ['coffee', 'jshint', 'uglify']);
   grunt.registerTask('server', ['connect', 'watch']);
 
 };
