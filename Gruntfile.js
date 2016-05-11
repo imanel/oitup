@@ -17,7 +17,12 @@ module.exports = function(grunt) {
       application: {
         dest: 'application.js',
         src: ['src/**/*.js']
-      }
+      },
+      options: {
+        beautify: true,
+        compress: false,
+        mangle: false
+      },
     },
 
     watch: {
