@@ -3,7 +3,7 @@ App.onLaunch = function(options) {
   downloader = new Downloader(localStorage.getItem('putioAccessToken'));
   return downloader.downloadList(null, function(header, files) {
     var list;
-    list = createList(header, files);
+    list = listTemplate(header, files);
     list.addEventListener("select", selectFile);
     list.addEventListener("play", selectFile);
     return navigationDocument.pushDocument(list);
@@ -156,33 +156,35 @@ File = (function() {
 
 })();
 
-var createAlert, createList, createListItem, escapeHTML, openDirectory, selectFile;
+var alertTemplate, listItemTemplate, listTemplate;
 
-createAlert = function(title, description) {
+alertTemplate = function(title, description) {
   var alertString, parser;
   alertString = "<?xml version='1.0' encoding='UTF-8' ?>\n<document>\n  <alertTemplate>\n    <title>" + (escapeHTML(title)) + "</title>\n    <description>" + (escapeHTML(description)) + "</description>\n  </alertTemplate>\n</document>";
   parser = new DOMParser();
   return parser.parseFromString(alertString, 'application/xml');
 };
 
-createList = function(title, files) {
+listTemplate = function(title, files) {
   var list, listFooter, listHeader, parser;
   listHeader = "<?xml version='1.0' encoding='UTF-8' ?>\n  <document>\n  <listTemplate>\n    <list>\n      <header>\n        <title>" + title + "</title>\n      </header>\n      <section>";
   listFooter = "      </section>\n    </list>\n  </listTemplate>\n</document>";
   list = files.map(function(file) {
-    return createListItem(file);
+    return listItemTemplate(file);
   });
   parser = new DOMParser();
   return parser.parseFromString(listHeader + list.join('') + listFooter, 'application/xml');
 };
 
-createListItem = function(file) {
+listItemTemplate = function(file) {
   var itemFooter, itemHeader, itemRelated;
   itemHeader = "<listItemLockup id='" + file.id + "'>\n  <title>" + file.name + "</title>\n  <img src=\"" + file.icon + "\" width=\"60\" height=\"60\" />";
   itemRelated = file.fileType === 'movie' ? "<relatedContent>\n  <lockup>\n    <img src=\"" + file.screenshot + "\" />\n    <description>" + file.name + "</description>\n  </lockup>\n</relatedContent>" : '<decorationImage src="resource://chevron" />';
   itemFooter = '</listItemLockup>';
   return itemHeader + itemRelated + itemFooter;
 };
+
+var escapeHTML, openDirectory, selectFile;
 
 selectFile = function(event) {
   var file, fileId;
