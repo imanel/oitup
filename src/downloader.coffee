@@ -19,6 +19,7 @@ class Downloader
     @urlFor '/files/' + fileId + '/start-from/set'
 
   download: (url, callback) ->
+    console.log "Downloading: " + url
     self = @
     downloadRequest = new XMLHttpRequest()
     downloadRequest.open 'GET', url
@@ -29,7 +30,10 @@ class Downloader
       files = json.files.map (f) => new File(self, f)
       callback parentName, files.filter (f) -> f.isUsable()
     downloadRequest.onerror = ->
-      console.log downloadRequest
+      console.log "Error: " + @responseText
+      json = JSON.parse(@responseText)
+      errorMessage = "Error code: #{json.status_code}, message: #{json.error}"
+      navigationDocument.replaceDocument alertTemplate('An error occured', errorMessage), navigationDocument.documents.slice(-1)[0]
     downloadRequest.send()
 
   downloadList: (parentId, callback) ->

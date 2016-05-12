@@ -8,6 +8,9 @@ App.onWillResignActive = ->
 App.onDidEnterBackground = ->
 
 App.onWillEnterForeground = ->
+  if navigationDocument.documents.length == 1
+    navigationDocument.clear()
+    downloadList null
 
 App.onDidBecomeActive = ->
 

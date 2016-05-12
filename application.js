@@ -8,7 +8,12 @@ App.onWillResignActive = function() {};
 
 App.onDidEnterBackground = function() {};
 
-App.onWillEnterForeground = function() {};
+App.onWillEnterForeground = function() {
+  if (navigationDocument.documents.length === 1) {
+    navigationDocument.clear();
+    return downloadList(null);
+  }
+};
 
 App.onDidBecomeActive = function() {};
 
@@ -48,6 +53,7 @@ Downloader = (function() {
 
   Downloader.prototype.download = function(url, callback) {
     var downloadRequest, self;
+    console.log("Downloading: " + url);
     self = this;
     downloadRequest = new XMLHttpRequest();
     downloadRequest.open('GET', url);
@@ -66,7 +72,11 @@ Downloader = (function() {
       }));
     };
     downloadRequest.onerror = function() {
-      return console.log(downloadRequest);
+      var errorMessage, json;
+      console.log("Error: " + this.responseText);
+      json = JSON.parse(this.responseText);
+      errorMessage = "Error code: " + json.status_code + ", message: " + json.error;
+      return navigationDocument.replaceDocument(alertTemplate('An error occured', errorMessage), navigationDocument.documents.slice(-1)[0]);
     };
     return downloadRequest.send();
   };

@@ -1,34 +1,34 @@
 alertTemplate = (title, description) ->
   alertString = """
-     <?xml version='1.0' encoding='UTF-8' ?>
-     <document>
-       <alertTemplate>
-         <title>#{ escapeHTML title }</title>
-         <description>#{ escapeHTML description }</description>
-       </alertTemplate>
-     </document>
+  <?xml version='1.0' encoding='UTF-8' ?>
+  <document>
+    <alertTemplate>
+      <title>#{ escapeHTML title }</title>
+      <description>#{ escapeHTML description }</description>
+    </alertTemplate>
+  </document>
   """
   new DOMParser().parseFromString(alertString, 'application/xml')
 
 listTemplate = (title, files) ->
   listHeader = """
-    <?xml version='1.0' encoding='UTF-8' ?>
-      <document>
-      <listTemplate>
-        <background>
-          <heroImg src="#{ App.background }" />
-        </background>
-        <list>
-          <header>
-            <title>#{ title }</title>
-          </header>
-          <section>
+  <?xml version='1.0' encoding='UTF-8' ?>
+    <document>
+    <listTemplate>
+      <background>
+        <heroImg src="#{ App.background }" />
+      </background>
+      <list>
+        <header>
+          <title>#{ title }</title>
+        </header>
+        <section>
   """
   listFooter = """
-          </section>
-        </list>
-      </listTemplate>
-    </document>
+        </section>
+      </list>
+    </listTemplate>
+  </document>
   """
   list = files.map (file) -> listItemTemplate(file)
   new DOMParser().parseFromString(listHeader + list.join('') + listFooter, 'application/xml')
