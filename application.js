@@ -3,7 +3,9 @@ App.onLaunch = function(options) {
   downloader = new Downloader(localStorage.getItem('putioAccessToken'));
   return downloader.downloadList(null, function(data) {
     var alert;
-    alert = createAlert('Put.IO Data', data);
+    alert = createAlert('Put.IO Data', data.map(function(d) {
+      return d.fileType;
+    }));
     return navigationDocument.pushDocument(alert);
   });
 };
@@ -53,8 +55,18 @@ Downloader = (function() {
     downloadRequest.responseType = 'json';
     downloadRequest.onload = function() {
       var files;
-      files = JSON.parse(this.responseText).files;
-      return callback(files);
+      files = JSON.parse(this.responseText).files.map(function(f) {
+        return new File(f);
+      });
+      console.log(files.filter(function(f) {
+        return f.isUsable();
+      }));
+      return callback(files.filter(function(f) {
+        return f.isUsable();
+      }));
+    };
+    downloadRequest.onerror = function() {
+      return console.log(downloadRequest);
     };
     return downloadRequest.send();
   };
@@ -64,6 +76,36 @@ Downloader = (function() {
   };
 
   return Downloader;
+
+})();
+
+var File;
+
+File = (function() {
+  function File(object) {
+    this.id = object.id;
+    this.name = object.name;
+    this.icon = object.icon;
+    this.screenshot = object.screenshot;
+    this.startFrom = object.start_from;
+    this.isPlayable = object.is_mp4_available || object.content_type === 'video/mp4';
+    this.fileType = (function() {
+      switch (object.file_type) {
+        case 0:
+          return 'directory';
+        case 3:
+          return 'movie';
+        default:
+          return 'other';
+      }
+    })();
+  }
+
+  File.prototype.isUsable = function() {
+    return this.fileType !== 'other';
+  };
+
+  return File;
 
 })();
 

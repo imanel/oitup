@@ -20,9 +20,11 @@ class Downloader
     downloadRequest.open 'GET', url
     downloadRequest.responseType = 'json'
     downloadRequest.onload = ->
-      files = JSON.parse(@responseText).files
-      callback files
-    # downloadRequest.onerror = error # TODO
+      files = JSON.parse(@responseText).files.map (f) -> new File(f)
+      console.log files.filter (f) -> f.isUsable()
+      callback files.filter (f) -> f.isUsable()
+    downloadRequest.onerror = ->
+      console.log downloadRequest
     downloadRequest.send()
 
   downloadList: (parentId, callback) ->
