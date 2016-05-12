@@ -21,7 +21,10 @@ module.exports = function(grunt) {
     },
 
     jshint: {
-      files: 'application.js'
+      files: 'application.js',
+      options: {
+        eqnull: true
+      }
     },
 
     uglify: {

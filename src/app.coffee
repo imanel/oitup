@@ -1,12 +1,6 @@
 App.onLaunch = (options) ->
-  downloader = new Downloader localStorage.getItem('putioAccessToken')
-  downloader.downloadList null, (header, files) ->
-    list = listTemplate header, files
-
-    list.addEventListener "select", selectFile
-    list.addEventListener "play", selectFile
-
-    navigationDocument.pushDocument list
+  @downloader = new Downloader localStorage.getItem('putioAccessToken')
+  downloadList null
 
 App.onWillResignActive = ->
 

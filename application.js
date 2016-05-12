@@ -1,13 +1,6 @@
 App.onLaunch = function(options) {
-  var downloader;
-  downloader = new Downloader(localStorage.getItem('putioAccessToken'));
-  return downloader.downloadList(null, function(header, files) {
-    var list;
-    list = listTemplate(header, files);
-    list.addEventListener("select", selectFile);
-    list.addEventListener("play", selectFile);
-    return navigationDocument.pushDocument(list);
-  });
+  this.downloader = new Downloader(localStorage.getItem('putioAccessToken'));
+  return downloadList(null);
 };
 
 App.onWillResignActive = function() {};
@@ -156,24 +149,22 @@ File = (function() {
 
 })();
 
-var alertTemplate, listItemTemplate, listTemplate;
+var alertTemplate, listItemTemplate, listTemplate, loadingTemplate;
 
 alertTemplate = function(title, description) {
-  var alertString, parser;
+  var alertString;
   alertString = "<?xml version='1.0' encoding='UTF-8' ?>\n<document>\n  <alertTemplate>\n    <title>" + (escapeHTML(title)) + "</title>\n    <description>" + (escapeHTML(description)) + "</description>\n  </alertTemplate>\n</document>";
-  parser = new DOMParser();
-  return parser.parseFromString(alertString, 'application/xml');
+  return new DOMParser().parseFromString(alertString, 'application/xml');
 };
 
 listTemplate = function(title, files) {
-  var list, listFooter, listHeader, parser;
+  var list, listFooter, listHeader;
   listHeader = "<?xml version='1.0' encoding='UTF-8' ?>\n  <document>\n  <listTemplate>\n    <list>\n      <header>\n        <title>" + title + "</title>\n      </header>\n      <section>";
   listFooter = "      </section>\n    </list>\n  </listTemplate>\n</document>";
   list = files.map(function(file) {
     return listItemTemplate(file);
   });
-  parser = new DOMParser();
-  return parser.parseFromString(listHeader + list.join('') + listFooter, 'application/xml');
+  return new DOMParser().parseFromString(listHeader + list.join('') + listFooter, 'application/xml');
 };
 
 listItemTemplate = function(file) {
@@ -184,7 +175,33 @@ listItemTemplate = function(file) {
   return itemHeader + itemRelated + itemFooter;
 };
 
-var escapeHTML, openDirectory, selectFile;
+loadingTemplate = function(title) {
+  var template;
+  if (title == null) {
+    title = 'Loading...';
+  }
+  template = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n  <document>\n    <loadingTemplate>\n      <activityIndicator>\n        <title>" + title + "</title>\n      </activityIndicator>\n    </loadingTemplate>\n  </document>";
+  return new DOMParser().parseFromString(template, "application/xml");
+};
+
+var downloadList, escapeHTML, selectFile;
+
+downloadList = function(listId) {
+  var loadingDocument;
+  loadingDocument = loadingTemplate();
+  navigationDocument.pushDocument(loadingDocument);
+  return App.downloader.downloadList(listId, function(header, files) {
+    var list;
+    list = listTemplate(header, files);
+    list.addEventListener("select", selectFile);
+    list.addEventListener("play", selectFile);
+    if (loadingDocument) {
+      return navigationDocument.replaceDocument(list, loadingDocument);
+    } else {
+      return navigationDocument.pushDocument(list);
+    }
+  });
+};
 
 selectFile = function(event) {
   var file, fileId;
@@ -194,11 +211,9 @@ selectFile = function(event) {
     case 'movie':
       return file.play();
     case 'directory':
-      return openDirectory(file);
+      return downloadList(file.id);
   }
 };
-
-openDirectory = function(id) {};
 
 escapeHTML = function(string) {
   return String(string).replace(/[\"&<>]/g, function(chr) {

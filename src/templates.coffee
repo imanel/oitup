@@ -8,8 +8,7 @@ alertTemplate = (title, description) ->
        </alertTemplate>
      </document>
   """
-  parser = new DOMParser()
-  parser.parseFromString(alertString, 'application/xml')
+  new DOMParser().parseFromString(alertString, 'application/xml')
 
 listTemplate = (title, files) ->
   listHeader = """
@@ -29,8 +28,7 @@ listTemplate = (title, files) ->
     </document>
   """
   list = files.map (file) -> listItemTemplate(file)
-  parser = new DOMParser()
-  parser.parseFromString(listHeader + list.join('') + listFooter, 'application/xml')
+  new DOMParser().parseFromString(listHeader + list.join('') + listFooter, 'application/xml')
 
 listItemTemplate = (file) ->
   itemHeader = """
@@ -51,3 +49,16 @@ listItemTemplate = (file) ->
     '<decorationImage src="resource://chevron" />'
   itemFooter = '</listItemLockup>'
   itemHeader + itemRelated + itemFooter
+
+loadingTemplate = (title = 'Loading...') ->
+    template = """
+    <?xml version="1.0" encoding="UTF-8" ?>
+      <document>
+        <loadingTemplate>
+          <activityIndicator>
+            <title>#{title}</title>
+          </activityIndicator>
+        </loadingTemplate>
+      </document>
+    """
+    new DOMParser().parseFromString template, "application/xml"
