@@ -1,8 +1,11 @@
 App.onLaunch = function(options) {
-  var alert, downloader;
+  var downloader;
   downloader = new Downloader(localStorage.getItem('putioAccessToken'));
-  alert = createAlert('Put.IO Token', downloader.urlForList());
-  return navigationDocument.pushDocument(alert);
+  return downloader.downloadList(null, function(data) {
+    var alert;
+    alert = createAlert('Put.IO Data', data);
+    return navigationDocument.pushDocument(alert);
+  });
 };
 
 App.onWillResignActive = function() {};
@@ -41,6 +44,23 @@ Downloader = (function() {
 
   Downloader.prototype.urlForMovie = function(fileId) {
     return this.urlFor('/files/' + fileId + '/hls/media.m3u8?subtitle_key=all');
+  };
+
+  Downloader.prototype.download = function(url, callback) {
+    var downloadRequest;
+    downloadRequest = new XMLHttpRequest();
+    downloadRequest.open('GET', url);
+    downloadRequest.responseType = 'json';
+    downloadRequest.onload = function() {
+      var files;
+      files = JSON.parse(this.responseText).files;
+      return callback(files);
+    };
+    return downloadRequest.send();
+  };
+
+  Downloader.prototype.downloadList = function(parentId, callback) {
+    return this.download(this.urlForList(parentId), callback);
   };
 
   return Downloader;
