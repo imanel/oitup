@@ -119,10 +119,6 @@ File = (function() {
     return this.fileType !== 'other';
   };
 
-  File.prototype.url = function() {
-    return this.downloader.urlForMovie(this.id);
-  };
-
   File.prototype.play = function() {
     var player, video;
     video = new MediaItem('video', this.downloader.urlForMovie(this.id));

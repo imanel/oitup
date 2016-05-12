@@ -19,9 +19,6 @@ class File
   isUsable: () ->
     @fileType != 'other'
 
-  url: () ->
-    @downloader.urlForMovie @id
-
   play: () ->
     video = new MediaItem 'video', @downloader.urlForMovie(@id)
     video.title = @name
