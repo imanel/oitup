@@ -1,5 +1,5 @@
 App.onLaunch = (options) ->
-  alert = createAlert('Hello World!', 'Welcome to tvOS')
+  alert = createAlert('Put.IO Token', localStorage.getItem('putioAccessToken'))
   navigationDocument.pushDocument alert
 
 App.onWillResignActive = ->

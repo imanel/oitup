@@ -2,7 +2,7 @@ var createAlert;
 
 App.onLaunch = function(options) {
   var alert;
-  alert = createAlert('Hello World!', 'Welcome to tvOS');
+  alert = createAlert('Put.IO Token', localStorage.getItem('putioAccessToken'));
   return navigationDocument.pushDocument(alert);
 };
 
