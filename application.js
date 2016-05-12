@@ -1,12 +1,10 @@
 App.onLaunch = function(options) {
   var downloader;
   downloader = new Downloader(localStorage.getItem('putioAccessToken'));
-  return downloader.downloadList(null, function(data) {
-    var alert;
-    alert = createAlert('Put.IO Data', data.map(function(d) {
-      return d.fileType;
-    }));
-    return navigationDocument.pushDocument(alert);
+  return downloader.downloadList(null, function(header, files) {
+    var list;
+    list = createList(header, files);
+    return navigationDocument.pushDocument(list);
   });
 };
 
@@ -54,14 +52,13 @@ Downloader = (function() {
     downloadRequest.open('GET', url);
     downloadRequest.responseType = 'json';
     downloadRequest.onload = function() {
-      var files;
-      files = JSON.parse(this.responseText).files.map(function(f) {
+      var files, json, parentName;
+      json = JSON.parse(this.responseText);
+      parentName = json.parent.name;
+      files = json.files.map(function(f) {
         return new File(f);
       });
-      console.log(files.filter(function(f) {
-        return f.isUsable();
-      }));
-      return callback(files.filter(function(f) {
+      return callback(parentName, files.filter(function(f) {
         return f.isUsable();
       }));
     };
@@ -109,13 +106,32 @@ File = (function() {
 
 })();
 
-var createAlert, escapeHTML;
+var createAlert, createList, createListItem, escapeHTML;
 
 createAlert = function(title, description) {
   var alertString, parser;
   alertString = "<?xml version='1.0' encoding='UTF-8' ?>\n<document>\n  <alertTemplate>\n    <title>" + (escapeHTML(title)) + "</title>\n    <description>" + (escapeHTML(description)) + "</description>\n  </alertTemplate>\n</document>";
   parser = new DOMParser();
   return parser.parseFromString(alertString, 'application/xml');
+};
+
+createList = function(title, files) {
+  var list, listFooter, listHeader, parser;
+  listHeader = "<?xml version='1.0' encoding='UTF-8' ?>\n  <document>\n  <listTemplate>\n    <list>\n      <header>\n        <title>" + title + "</title>\n      </header>\n      <section>";
+  listFooter = "      </section>\n    </list>\n  </listTemplate>\n</document>";
+  list = files.map(function(file) {
+    return createListItem(file);
+  });
+  parser = new DOMParser();
+  return parser.parseFromString(listHeader + list.join('') + listFooter, 'application/xml');
+};
+
+createListItem = function(file) {
+  var itemFooter, itemHeader, itemRelated;
+  itemHeader = "<listItemLockup>\n  <title>" + file.name + "</title>\n  <img src=\"" + file.icon + "\" width=\"60\" height=\"60\" />";
+  itemRelated = file.fileType === 'movie' ? "<relatedContent>\n  <lockup>\n    <img src=\"" + file.screenshot + "\" />\n    <description>" + file.name + "</description>\n  </lockup>\n</relatedContent>" : '<decorationImage src="resource://chevron" />';
+  itemFooter = '</listItemLockup>';
+  return itemHeader + itemRelated + itemFooter;
 };
 
 escapeHTML = function(string) {
