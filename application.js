@@ -4,6 +4,8 @@ App.onLaunch = function(options) {
   return downloader.downloadList(null, function(header, files) {
     var list;
     list = createList(header, files);
+    list.addEventListener("select", selectFile);
+    list.addEventListener("play", selectFile);
     return navigationDocument.pushDocument(list);
   });
 };
@@ -46,6 +48,10 @@ Downloader = (function() {
     return this.urlFor('/files/' + fileId + '/hls/media.m3u8?subtitle_key=all');
   };
 
+  Downloader.prototype.urlForSetStartFrom = function(fileId) {
+    return this.urlFor('/files/' + fileId + '/start-from/set');
+  };
+
   Downloader.prototype.download = function(url, callback) {
     var downloadRequest, self;
     self = this;
@@ -75,6 +81,15 @@ Downloader = (function() {
     return this.download(this.urlForList(parentId), callback);
   };
 
+  Downloader.prototype.setStartFrom = function(fileId, time) {
+    var request, url;
+    url = this.urlForSetStartFrom(fileId);
+    request = new XMLHttpRequest();
+    request.open('POST', url);
+    request.responseType = 'json';
+    return request.send('time=' + time);
+  };
+
   return Downloader;
 
 })();
@@ -82,9 +97,12 @@ Downloader = (function() {
 var File;
 
 File = (function() {
+  File.files = {};
+
   function File(downloader, object) {
     this.downloader = downloader;
-    this.id = object.id;
+    this.id = String(object.id);
+    this.constructor.files[this.id] = this;
     this.name = object.name;
     this.icon = object.icon;
     this.screenshot = object.screenshot;
@@ -110,11 +128,35 @@ File = (function() {
     return this.downloader.urlForMovie(this.id);
   };
 
+  File.prototype.play = function() {
+    var player, video;
+    video = new MediaItem('video', this.downloader.urlForMovie(this.id));
+    video.title = this.name;
+    video.artworkImageURL = this.screenshot;
+    video.resumeTime = this.startFrom;
+    player = new Player();
+    player.playlist = new Playlist();
+    player.playlist.push(video);
+    player.addEventListener("timeDidChange", ((function(_this) {
+      return function(event) {
+        return _this.updateStartFrom(event.time);
+      };
+    })(this)), {
+      interval: 10
+    });
+    return player.play();
+  };
+
+  File.prototype.updateStartFrom = function(time) {
+    this.startFrom = time;
+    return this.downloader.setStartFrom(this.id, time);
+  };
+
   return File;
 
 })();
 
-var createAlert, createList, createListItem, escapeHTML;
+var createAlert, createList, createListItem, escapeHTML, openDirectory, selectFile;
 
 createAlert = function(title, description) {
   var alertString, parser;
@@ -136,11 +178,25 @@ createList = function(title, files) {
 
 createListItem = function(file) {
   var itemFooter, itemHeader, itemRelated;
-  itemHeader = "<listItemLockup>\n  <title>" + file.name + "</title>\n  <img src=\"" + file.icon + "\" width=\"60\" height=\"60\" />";
+  itemHeader = "<listItemLockup id='" + file.id + "'>\n  <title>" + file.name + "</title>\n  <img src=\"" + file.icon + "\" width=\"60\" height=\"60\" />";
   itemRelated = file.fileType === 'movie' ? "<relatedContent>\n  <lockup>\n    <img src=\"" + file.screenshot + "\" />\n    <description>" + file.name + "</description>\n  </lockup>\n</relatedContent>" : '<decorationImage src="resource://chevron" />';
   itemFooter = '</listItemLockup>';
   return itemHeader + itemRelated + itemFooter;
 };
+
+selectFile = function(event) {
+  var file, fileId;
+  fileId = event.target.getAttribute('id');
+  file = File.files[fileId];
+  switch (file.fileType) {
+    case 'movie':
+      return file.play();
+    case 'directory':
+      return openDirectory(file);
+  }
+};
+
+openDirectory = function(id) {};
 
 escapeHTML = function(string) {
   return String(string).replace(/[\"&<>]/g, function(chr) {

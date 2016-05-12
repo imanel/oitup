@@ -1,6 +1,10 @@
 class File
+  @files = {}
+
   constructor: (@downloader, object) ->
-    @id = object.id
+    @id = String(object.id)
+    @constructor.files[@id] = @
+
     @name = object.name
     @icon = object.icon
     @screenshot = object.screenshot
@@ -16,3 +20,23 @@ class File
 
   url: () ->
     @downloader.urlForMovie @id
+
+  play: () ->
+    video = new MediaItem 'video', @downloader.urlForMovie(@id)
+    video.title = @name
+    video.artworkImageURL = @screenshot
+    video.resumeTime = @startFrom
+
+    player = new Player()
+    player.playlist = new Playlist()
+    player.playlist.push video
+
+    player.addEventListener "timeDidChange", ((event) =>
+      @updateStartFrom event.time
+    ), { interval: 10 }
+
+    player.play()
+
+  updateStartFrom: (time) ->
+    @startFrom = time
+    @downloader.setStartFrom @id, time

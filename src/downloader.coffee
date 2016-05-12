@@ -15,6 +15,9 @@ class Downloader
   urlForMovie: (fileId) ->
     @urlFor '/files/' + fileId + '/hls/media.m3u8?subtitle_key=all'
 
+  urlForSetStartFrom: (fileId) ->
+    @urlFor '/files/' + fileId + '/start-from/set'
+
   download: (url, callback) ->
     self = @
     downloadRequest = new XMLHttpRequest()
@@ -31,3 +34,10 @@ class Downloader
 
   downloadList: (parentId, callback) ->
     @download @urlForList(parentId), callback
+
+  setStartFrom: (fileId, time) ->
+    url = @urlForSetStartFrom fileId
+    request = new XMLHttpRequest()
+    request.open 'POST', url
+    request.responseType = 'json'
+    request.send 'time=' + time
