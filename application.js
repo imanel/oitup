@@ -42,7 +42,7 @@ Downloader = (function() {
 
   Downloader.prototype.baseURL = 'https://api.put.io/v2';
 
-  Downloader.prototype.url = function(path) {
+  Downloader.prototype.urlFor = function(path) {
     var operator;
     operator = path.indexOf('?') > -1 ? '&' : '?';
     return this.baseURL + path + operator + 'oauth_token=' + this.accessToken;
@@ -54,11 +54,11 @@ Downloader = (function() {
     if (parentId) {
       path += '?parent_id=' + parentId;
     }
-    return this.url(path);
+    return this.urlFor(path);
   };
 
   Downloader.prototype.urlForMovie = function(fileId) {
-    return this.url("/files/" + fileId + "/hls/media.m3u8?subtitle_key=all");
+    return this.urlFor('/files/' + fileId + '/hls/media.m3u8?subtitle_key=all');
   };
 
   return Downloader;

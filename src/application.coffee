@@ -34,14 +34,14 @@ class Downloader
 
   baseURL: 'https://api.put.io/v2'
 
-  url: (path) ->
+  urlFor: (path) ->
     operator = if path.indexOf('?') > -1 then '&' else '?'
     @baseURL + path + operator + 'oauth_token=' + @accessToken
 
   urlForList: (parentId) ->
     path = '/files/list'
     path += '?parent_id=' + parentId if parentId
-    @url(path)
+    @urlFor path
 
   urlForMovie: (fileId) ->
-    @url("/files/#{ fileId }/hls/media.m3u8?subtitle_key=all")
+    @urlFor '/files/' + fileId + '/hls/media.m3u8?subtitle_key=all'
