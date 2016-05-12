@@ -93,6 +93,7 @@ File = (function() {
   File.files = {};
 
   function File(downloader, object) {
+    var ref;
     this.downloader = downloader;
     this.id = String(object.id);
     this.constructor.files[this.id] = this;
@@ -100,6 +101,7 @@ File = (function() {
     this.icon = object.icon;
     this.screenshot = object.screenshot;
     this.startFrom = object.start_from;
+    this.duration = this.calculateDuration((ref = object.video_metadata) != null ? ref.duration : void 0);
     this.isPlayable = object.is_mp4_available || object.content_type === 'video/mp4';
     this.fileType = (function() {
       switch (object.file_type) {
@@ -145,6 +147,17 @@ File = (function() {
     return this.downloader.setStartFrom(this.id, time);
   };
 
+  File.prototype.calculateDuration = function(duration) {
+    var hours, minutes, result;
+    hours = parseInt(duration / 3600);
+    minutes = parseInt(duration / 60) % 60;
+    result = "";
+    if (hours > 0) {
+      result += hours + " hr ";
+    }
+    return result + minutes + " min";
+  };
+
   return File;
 
 })();
@@ -170,7 +183,7 @@ listTemplate = function(title, files) {
 listItemTemplate = function(file) {
   var itemFooter, itemHeader, itemRelated;
   itemHeader = "<listItemLockup id='" + file.id + "'>\n  <title>" + file.name + "</title>\n  <img src=\"" + file.icon + "\" width=\"60\" height=\"60\" />";
-  itemRelated = file.fileType === 'movie' ? "<relatedContent>\n  <lockup>\n    <img src=\"" + file.screenshot + "\" />\n    <description>" + file.name + "</description>\n  </lockup>\n</relatedContent>" : '<decorationImage src="resource://chevron" />';
+  itemRelated = file.fileType === 'movie' ? "<relatedContent>\n  <lockup>\n    <img src=\"" + file.screenshot + "\" />\n    <description>" + file.name + "<br />" + file.duration + "</description>\n  </lockup>\n</relatedContent>" : '<decorationImage src="resource://chevron" />';
   itemFooter = '</listItemLockup>';
   return itemHeader + itemRelated + itemFooter;
 };

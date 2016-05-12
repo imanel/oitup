@@ -41,7 +41,7 @@ listItemTemplate = (file) ->
     <relatedContent>
       <lockup>
         <img src="#{ file.screenshot }" />
-        <description>#{ file.name }</description>
+        <description>#{ file.name }<br />#{ file.duration }</description>
       </lockup>
     </relatedContent>
     """
