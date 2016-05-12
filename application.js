@@ -1,5 +1,3 @@
-var Downloader, createAlert, escapeHTML;
-
 App.onLaunch = function(options) {
   var alert, downloader;
   downloader = new Downloader(localStorage.getItem('putioAccessToken'));
@@ -17,23 +15,7 @@ App.onDidBecomeActive = function() {};
 
 App.onWillTerminate = function() {};
 
-createAlert = function(title, description) {
-  var alertString, parser;
-  alertString = "<?xml version='1.0' encoding='UTF-8' ?>\n<document>\n  <alertTemplate>\n    <title>" + (escapeHTML(title)) + "</title>\n    <description>" + (escapeHTML(description)) + "</description>\n  </alertTemplate>\n</document>";
-  parser = new DOMParser();
-  return parser.parseFromString(alertString, 'application/xml');
-};
-
-escapeHTML = function(string) {
-  return String(string).replace(/[\"&<>]/g, function(chr) {
-    return {
-      '"': '&quot;',
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;'
-    }[chr];
-  });
-};
+var Downloader;
 
 Downloader = (function() {
   function Downloader(accessToken) {
@@ -64,3 +46,23 @@ Downloader = (function() {
   return Downloader;
 
 })();
+
+var createAlert, escapeHTML;
+
+createAlert = function(title, description) {
+  var alertString, parser;
+  alertString = "<?xml version='1.0' encoding='UTF-8' ?>\n<document>\n  <alertTemplate>\n    <title>" + (escapeHTML(title)) + "</title>\n    <description>" + (escapeHTML(description)) + "</description>\n  </alertTemplate>\n</document>";
+  parser = new DOMParser();
+  return parser.parseFromString(alertString, 'application/xml');
+};
+
+escapeHTML = function(string) {
+  return String(string).replace(/[\"&<>]/g, function(chr) {
+    return {
+      '"': '&quot;',
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;'
+    }[chr];
+  });
+};
