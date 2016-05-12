@@ -1,0 +1,52 @@
+<html lang="en">
+  <head>
+    <title>Put.IO for Apple TV</title>
+    <style media="screen" type="text/css">
+      body, a, p {
+        color: #777;
+        text-decoration: none;
+        font-family: Helvetica, Arial, sans-serif;
+        font-size: 24px;
+        text-align: center;
+        line-height: 100%;
+        padding: 0;
+        margin: 0;
+      }
+      a:hover, #access-token {
+        color: #333;
+      }
+      #access-token {
+        font-weight: bold;
+      }
+      #obtain, #obtained {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        width: 400px;
+        margin-left: -200px;
+        margin-top: -12px;
+      }
+      #obtained {
+        display: none;
+      }
+    </style>
+    <script type="text/javascript">
+      document.addEventListener('DOMContentLoaded', function() {
+        var token = window.location.hash.match('#access_token=(.*)');
+        if (token !== null) {
+          document.getElementById('obtain').style.display = "none";
+          document.getElementById('obtained').style.display = "block";
+          document.getElementById('access-token').innerHTML = token[1];
+        }
+      }, false);
+    </script>
+  </head>
+  <body>
+    <section id="obtain">
+      <a href="https://api.put.io/v2/oauth2/authenticate?client_id=2423&response_type=token&redirect_uri=https://imanel.org/putio-tvos/">Click here to obtain access token</a>
+    </section>
+    <section id="obtained">
+      <p>Your access token is: <span id="access-token"></span></p>
+    </section>
+  </body>
+</html>
