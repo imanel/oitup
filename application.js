@@ -47,7 +47,8 @@ Downloader = (function() {
   };
 
   Downloader.prototype.download = function(url, callback) {
-    var downloadRequest;
+    var downloadRequest, self;
+    self = this;
     downloadRequest = new XMLHttpRequest();
     downloadRequest.open('GET', url);
     downloadRequest.responseType = 'json';
@@ -55,9 +56,11 @@ Downloader = (function() {
       var files, json, parentName;
       json = JSON.parse(this.responseText);
       parentName = json.parent.name;
-      files = json.files.map(function(f) {
-        return new File(f);
-      });
+      files = json.files.map((function(_this) {
+        return function(f) {
+          return new File(self, f);
+        };
+      })(this));
       return callback(parentName, files.filter(function(f) {
         return f.isUsable();
       }));
@@ -79,7 +82,8 @@ Downloader = (function() {
 var File;
 
 File = (function() {
-  function File(object) {
+  function File(downloader, object) {
+    this.downloader = downloader;
     this.id = object.id;
     this.name = object.name;
     this.icon = object.icon;
@@ -100,6 +104,10 @@ File = (function() {
 
   File.prototype.isUsable = function() {
     return this.fileType !== 'other';
+  };
+
+  File.prototype.url = function() {
+    return this.downloader.urlForMovie(this.id);
   };
 
   return File;

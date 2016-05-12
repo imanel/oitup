@@ -16,13 +16,14 @@ class Downloader
     @urlFor '/files/' + fileId + '/hls/media.m3u8?subtitle_key=all'
 
   download: (url, callback) ->
+    self = @
     downloadRequest = new XMLHttpRequest()
     downloadRequest.open 'GET', url
     downloadRequest.responseType = 'json'
     downloadRequest.onload = ->
       json = JSON.parse(@responseText)
       parentName = json.parent.name
-      files = json.files.map (f) -> new File(f)
+      files = json.files.map (f) => new File(self, f)
       callback parentName, files.filter (f) -> f.isUsable()
     downloadRequest.onerror = ->
       console.log downloadRequest

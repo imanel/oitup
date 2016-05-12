@@ -1,5 +1,5 @@
 class File
-  constructor: (object) ->
+  constructor: (@downloader, object) ->
     @id = object.id
     @name = object.name
     @icon = object.icon
@@ -13,3 +13,6 @@ class File
 
   isUsable: () ->
     @fileType != 'other'
+
+  url: () ->
+    @downloader.urlForMovie @id
