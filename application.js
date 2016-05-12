@@ -1,5 +1,6 @@
 App.onLaunch = function(options) {
   this.downloader = new Downloader(localStorage.getItem('putioAccessToken'));
+  this.background = 'https://bit.ly/1T8Rz1S';
   return downloadList(null);
 };
 
@@ -168,7 +169,7 @@ alertTemplate = function(title, description) {
 
 listTemplate = function(title, files) {
   var list, listFooter, listHeader;
-  listHeader = "<?xml version='1.0' encoding='UTF-8' ?>\n  <document>\n  <listTemplate>\n    <list>\n      <header>\n        <title>" + title + "</title>\n      </header>\n      <section>";
+  listHeader = "<?xml version='1.0' encoding='UTF-8' ?>\n  <document>\n  <listTemplate>\n    <background>\n      <heroImg src=\"" + App.background + "\" />\n    </background>\n    <list>\n      <header>\n        <title>" + title + "</title>\n      </header>\n      <section>";
   listFooter = "      </section>\n    </list>\n  </listTemplate>\n</document>";
   list = files.map(function(file) {
     return listItemTemplate(file);
@@ -179,7 +180,7 @@ listTemplate = function(title, files) {
 listItemTemplate = function(file) {
   var itemFooter, itemHeader, itemRelated;
   itemHeader = "<listItemLockup id='" + file.id + "'>\n  <title>" + file.name + "</title>\n  <img src=\"" + file.icon + "\" width=\"60\" height=\"60\" />";
-  itemRelated = file.fileType === 'movie' ? "<relatedContent>\n  <lockup>\n    <img src=\"" + file.screenshot + "\" />\n    <description>" + file.name + "<br />" + file.duration + "</description>\n  </lockup>\n</relatedContent>" : '<decorationImage src="resource://chevron" />';
+  itemRelated = file.fileType === 'movie' ? "<relatedContent>\n  <lockup>\n    <img src=\"" + file.screenshot + "\" />\n    <description>" + file.name + "<br />" + file.duration + "</description>\n  </lockup>\n</relatedContent>" : "<decorationImage src=\"resource://chevron\" />\n<relatedContent>\n  <lockup>\n  </lockup>\n</relatedContent>";
   itemFooter = '</listItemLockup>';
   return itemHeader + itemRelated + itemFooter;
 };
@@ -189,7 +190,7 @@ loadingTemplate = function(title) {
   if (title == null) {
     title = 'Loading...';
   }
-  template = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n  <document>\n    <loadingTemplate>\n      <activityIndicator>\n        <title>" + title + "</title>\n      </activityIndicator>\n    </loadingTemplate>\n  </document>";
+  template = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n  <document>\n    <loadingTemplate>\n      <background>\n        <heroImg src=\"" + App.background + "\" />\n      </background>\n      <activityIndicator>\n        <title>" + title + "</title>\n      </activityIndicator>\n    </loadingTemplate>\n  </document>";
   return new DOMParser().parseFromString(template, "application/xml");
 };
 

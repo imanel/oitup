@@ -15,6 +15,9 @@ listTemplate = (title, files) ->
     <?xml version='1.0' encoding='UTF-8' ?>
       <document>
       <listTemplate>
+        <background>
+          <heroImg src="#{ App.background }" />
+        </background>
         <list>
           <header>
             <title>#{ title }</title>
@@ -46,7 +49,13 @@ listItemTemplate = (file) ->
     </relatedContent>
     """
   else
-    '<decorationImage src="resource://chevron" />'
+    """
+    <decorationImage src="resource://chevron" />
+    <relatedContent>
+      <lockup>
+      </lockup>
+    </relatedContent>
+    """
   itemFooter = '</listItemLockup>'
   itemHeader + itemRelated + itemFooter
 
@@ -55,6 +64,9 @@ loadingTemplate = (title = 'Loading...') ->
     <?xml version="1.0" encoding="UTF-8" ?>
       <document>
         <loadingTemplate>
+          <background>
+            <heroImg src="#{ App.background }" />
+          </background>
           <activityIndicator>
             <title>#{title}</title>
           </activityIndicator>
