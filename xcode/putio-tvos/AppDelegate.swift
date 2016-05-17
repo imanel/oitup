@@ -16,7 +16,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, TVApplicationControllerDe
     var appController: TVApplicationController?
     
     static let tvBaseURL = "https://imanel.org/putio-tvos/"
-    static let tvBootURL = NSBundle.mainBundle().URLForResource("application", withExtension: "js")
     
     // MARK: Javascript Execution Helper
     
@@ -40,7 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, TVApplicationControllerDe
         let appControllerContext = TVApplicationControllerContext()
         
         // The JavaScript URL is used to create the JavaScript context for your TVMLKit application. Although it is possible to separate your JavaScript into separate files, to help reduce the launch time of your application we recommend creating minified and compressed version of this resource. This will allow for the resource to be retrieved and UI presented to the user quickly.
-        if let javaScriptURL = AppDelegate.tvBootURL {
+        if let javaScriptURL = NSBundle.mainBundle().URLForResource("application", withExtension: "js") {
             appControllerContext.javaScriptApplicationURL = javaScriptURL
         }
         
