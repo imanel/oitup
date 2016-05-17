@@ -1,14 +1,14 @@
-alertTemplate = (title, description) ->
-  alertString = """
+errorTemplate = (description) ->
+  template = """
   <?xml version='1.0' encoding='UTF-8' ?>
   <document>
     <alertTemplate>
-      <title>#{ escapeHTML title }</title>
-      <description>#{ escapeHTML description }</description>
+      <title>#{ escapeHTML description }</title>
+      <description>You can find help at https://github.com/imanel/putio-tvos/issues</description>
     </alertTemplate>
   </document>
   """
-  new DOMParser().parseFromString(alertString, 'application/xml')
+  new DOMParser().parseFromString(template, 'application/xml')
 
 listTemplate = (title, files) ->
   listHeader = """

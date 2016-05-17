@@ -78,7 +78,7 @@ Downloader = (function() {
         return login();
       } else {
         errorMessage = "Error code: " + json.status_code + ", message: " + json.error;
-        return navigationDocument.replaceDocument(alertTemplate('An error occured', errorMessage), navigationDocument.documents.slice(-1)[0]);
+        return navigationDocument.replaceDocument(errorTemplate(errorMessage), navigationDocument.documents.slice(-1)[0]);
       }
     };
     return downloadRequest.send();
@@ -172,12 +172,12 @@ File = (function() {
 
 })();
 
-var alertTemplate, listItemTemplate, listTemplate, loadingTemplate, loginTemplate;
+var errorTemplate, listItemTemplate, listTemplate, loadingTemplate, loginTemplate;
 
-alertTemplate = function(title, description) {
-  var alertString;
-  alertString = "<?xml version='1.0' encoding='UTF-8' ?>\n<document>\n  <alertTemplate>\n    <title>" + (escapeHTML(title)) + "</title>\n    <description>" + (escapeHTML(description)) + "</description>\n  </alertTemplate>\n</document>";
-  return new DOMParser().parseFromString(alertString, 'application/xml');
+errorTemplate = function(description) {
+  var template;
+  template = "<?xml version='1.0' encoding='UTF-8' ?>\n<document>\n  <alertTemplate>\n    <title>" + (escapeHTML(description)) + "</title>\n    <description>You can find help at https://github.com/imanel/putio-tvos/issues</description>\n  </alertTemplate>\n</document>";
+  return new DOMParser().parseFromString(template, 'application/xml');
 };
 
 listTemplate = function(title, files) {

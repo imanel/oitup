@@ -36,7 +36,7 @@ class Downloader
         login()
       else
         errorMessage = "Error code: #{json.status_code}, message: #{json.error}"
-        navigationDocument.replaceDocument alertTemplate('An error occured', errorMessage), navigationDocument.documents.slice(-1)[0]
+        navigationDocument.replaceDocument errorTemplate(errorMessage), navigationDocument.documents.slice(-1)[0]
     downloadRequest.send()
 
   downloadList: (parentId, callback) ->
