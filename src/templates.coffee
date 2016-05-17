@@ -15,9 +15,6 @@ listTemplate = (title, files) ->
   <?xml version='1.0' encoding='UTF-8' ?>
     <document>
     <listTemplate>
-      <background>
-        <heroImg src="#{ App.background }" />
-      </background>
       <list>
         <header>
           <title>#{ title }</title>
@@ -64,9 +61,6 @@ loadingTemplate = (title = 'Loading...') ->
     <?xml version="1.0" encoding="UTF-8" ?>
       <document>
         <loadingTemplate>
-          <background>
-            <heroImg src="#{ App.background }" />
-          </background>
           <activityIndicator>
             <title>#{title}</title>
           </activityIndicator>

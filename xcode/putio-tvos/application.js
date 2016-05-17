@@ -1,6 +1,5 @@
 App.onLaunch = function(options) {
   this.downloader = new Downloader(localStorage.getItem('putioAccessToken'));
-  this.background = 'https://bit.ly/1T8Rz1S';
   return downloadList(null);
 };
 
@@ -179,7 +178,7 @@ alertTemplate = function(title, description) {
 
 listTemplate = function(title, files) {
   var list, listFooter, listHeader;
-  listHeader = "<?xml version='1.0' encoding='UTF-8' ?>\n  <document>\n  <listTemplate>\n    <background>\n      <heroImg src=\"" + App.background + "\" />\n    </background>\n    <list>\n      <header>\n        <title>" + title + "</title>\n      </header>\n      <section>";
+  listHeader = "<?xml version='1.0' encoding='UTF-8' ?>\n  <document>\n  <listTemplate>\n    <list>\n      <header>\n        <title>" + title + "</title>\n      </header>\n      <section>";
   listFooter = "      </section>\n    </list>\n  </listTemplate>\n</document>";
   list = files.map(function(file) {
     return listItemTemplate(file);
@@ -200,7 +199,7 @@ loadingTemplate = function(title) {
   if (title == null) {
     title = 'Loading...';
   }
-  template = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n  <document>\n    <loadingTemplate>\n      <background>\n        <heroImg src=\"" + App.background + "\" />\n      </background>\n      <activityIndicator>\n        <title>" + title + "</title>\n      </activityIndicator>\n    </loadingTemplate>\n  </document>";
+  template = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n  <document>\n    <loadingTemplate>\n      <activityIndicator>\n        <title>" + title + "</title>\n      </activityIndicator>\n    </loadingTemplate>\n  </document>";
   return new DOMParser().parseFromString(template, "application/xml");
 };
 
