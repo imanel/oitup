@@ -22,3 +22,17 @@ selectFile = (event) ->
 
 escapeHTML = (string) ->
   String(string).replace /[\"&<>]/g, (chr) -> { '"': '&quot;', '&': '&amp;', '<': '&lt;', '>': '&gt;' }[chr]
+
+login = () ->
+  loginView = loginTemplate()
+  tokenField = loginView.getElementsByTagName('textField').item(0)
+  loginView.addEventListener "select", -> handleLogin(tokenField)
+  loginView.addEventListener "play", -> handleLogin(tokenField)
+  navigationDocument.pushDocument loginView
+
+handleLogin = (tokenField) ->
+  token = tokenField.getFeature('Keyboard').text
+  localStorage.setItem('putioAccessToken', token)
+  App.downloader = new Downloader token
+  navigationDocument.clear()
+  downloadList null

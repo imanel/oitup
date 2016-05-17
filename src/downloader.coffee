@@ -32,8 +32,11 @@ class Downloader
     downloadRequest.onerror = ->
       console.log "Error: " + @responseText
       json = JSON.parse(@responseText)
-      errorMessage = "Error code: #{json.status_code}, message: #{json.error}"
-      navigationDocument.replaceDocument alertTemplate('An error occured', errorMessage), navigationDocument.documents.slice(-1)[0]
+      if json.error == 'invalid_grant'
+        login()
+      else
+        errorMessage = "Error code: #{json.status_code}, message: #{json.error}"
+        navigationDocument.replaceDocument alertTemplate('An error occured', errorMessage), navigationDocument.documents.slice(-1)[0]
     downloadRequest.send()
 
   downloadList: (parentId, callback) ->

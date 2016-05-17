@@ -74,8 +74,12 @@ Downloader = (function() {
       var errorMessage, json;
       console.log("Error: " + this.responseText);
       json = JSON.parse(this.responseText);
-      errorMessage = "Error code: " + json.status_code + ", message: " + json.error;
-      return navigationDocument.replaceDocument(alertTemplate('An error occured', errorMessage), navigationDocument.documents.slice(-1)[0]);
+      if (json.error === 'invalid_grant') {
+        return login();
+      } else {
+        errorMessage = "Error code: " + json.status_code + ", message: " + json.error;
+        return navigationDocument.replaceDocument(alertTemplate('An error occured', errorMessage), navigationDocument.documents.slice(-1)[0]);
+      }
     };
     return downloadRequest.send();
   };
@@ -168,7 +172,7 @@ File = (function() {
 
 })();
 
-var alertTemplate, listItemTemplate, listTemplate, loadingTemplate;
+var alertTemplate, listItemTemplate, listTemplate, loadingTemplate, loginTemplate;
 
 alertTemplate = function(title, description) {
   var alertString;
@@ -203,7 +207,13 @@ loadingTemplate = function(title) {
   return new DOMParser().parseFromString(template, "application/xml");
 };
 
-var downloadList, escapeHTML, selectFile;
+loginTemplate = function() {
+  var template;
+  template = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<document>\n  <formTemplate>\n    <banner>\n      <title>Put.io Login</title>\n      <description>In order to use Put.io you will need access token.<br />To obtain one please visit https://imanel.org/putio-tvos and follow instructions visible on screen.</description>\n    </banner>\n    <textField>Access Token</textField>\n    <footer>\n      <button>\n        <text>Login</text>\n      </button>\n    </footer>\n  </formTemplate>\n</document>";
+  return new DOMParser().parseFromString(template, "application/xml");
+};
+
+var downloadList, escapeHTML, handleLogin, login, selectFile;
 
 downloadList = function(listId) {
   var loadingDocument;
@@ -243,4 +253,26 @@ escapeHTML = function(string) {
       '>': '&gt;'
     }[chr];
   });
+};
+
+login = function() {
+  var loginView, tokenField;
+  loginView = loginTemplate();
+  tokenField = loginView.getElementsByTagName('textField').item(0);
+  loginView.addEventListener("select", function() {
+    return handleLogin(tokenField);
+  });
+  loginView.addEventListener("play", function() {
+    return handleLogin(tokenField);
+  });
+  return navigationDocument.pushDocument(loginView);
+};
+
+handleLogin = function(tokenField) {
+  var token;
+  token = tokenField.getFeature('Keyboard').text;
+  localStorage.setItem('putioAccessToken', token);
+  App.downloader = new Downloader(token);
+  navigationDocument.clear();
+  return downloadList(null);
 };
