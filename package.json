@@ -1,6 +1,6 @@
 {
   "name": "putio-tvos",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "devDependencies": {
     "grunt": "~1.0.0",
     "grunt-contrib-coffee": "~1.0.0",
