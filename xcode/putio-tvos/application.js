@@ -116,6 +116,7 @@ File = (function() {
     this.screenshot = object.screenshot;
     this.startFrom = object.start_from;
     this.duration = this.calculateDuration((ref = object.video_metadata) != null ? ref.duration : void 0);
+    this.size = this.calculateSize(object.size);
     this.isPlayable = object.is_mp4_available || object.content_type === 'video/mp4';
     this.fileType = (function() {
       switch (object.file_type) {
@@ -168,6 +169,25 @@ File = (function() {
     return result + minutes + " min";
   };
 
+  File.prototype.calculateSize = function(size) {
+    var gb, kb, mb, tb;
+    kb = (size / 1024).toFixed(1);
+    mb = (kb / 1024).toFixed(1);
+    gb = (mb / 1024).toFixed(1);
+    tb = (gb / 1024).toFixed(1);
+    if (tb >= 1) {
+      return tb + " TB";
+    } else if (gb >= 1) {
+      return gb + " GB";
+    } else if (mb >= 1) {
+      return mb + " MB";
+    } else if (kb >= 1) {
+      return kb + " kB";
+    } else {
+      return size + " bytes";
+    }
+  };
+
   return File;
 
 })();
@@ -193,7 +213,7 @@ listTemplate = function(title, files) {
 listItemTemplate = function(file) {
   var itemFooter, itemHeader, itemRelated;
   itemHeader = "<listItemLockup id='" + file.id + "'>\n  <title>" + file.name + "</title>\n  <img src=\"" + file.icon + "\" width=\"60\" height=\"60\" />";
-  itemRelated = file.fileType === 'movie' ? "<relatedContent>\n  <lockup>\n    <img src=\"" + file.screenshot + "\" />\n    <description>" + file.name + "<br />" + file.duration + "</description>\n  </lockup>\n</relatedContent>" : "<decorationImage src=\"resource://chevron\" />\n<relatedContent>\n  <lockup>\n  </lockup>\n</relatedContent>";
+  itemRelated = file.fileType === 'movie' ? "<relatedContent>\n  <lockup>\n    <img src=\"" + file.screenshot + "\" />\n    <description>" + file.name + "<br />" + file.duration + "<br />" + file.size + "</description>\n  </lockup>\n</relatedContent>" : "<decorationImage src=\"resource://chevron\" />\n<relatedContent>\n  <lockup>\n  </lockup>\n</relatedContent>";
   itemFooter = '</listItemLockup>';
   return itemHeader + itemRelated + itemFooter;
 };
