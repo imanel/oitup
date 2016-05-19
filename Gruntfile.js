@@ -4,7 +4,7 @@ module.exports = function(grunt) {
     coffee: {
       application: {
         files: {
-          'xcode/oitup/application.js': 'src/**/*.coffee'
+          'xcode/Oitup/application.js': 'src/**/*.coffee'
         },
         options: {
           bare: true
@@ -13,7 +13,7 @@ module.exports = function(grunt) {
     },
 
     jshint: {
-      files: 'xcode/oitup/application.js',
+      files: 'xcode/Oitup/application.js',
       options: {
         eqnull: true
       }
