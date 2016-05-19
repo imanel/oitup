@@ -29,6 +29,17 @@
       #obtained {
         display: none;
       }
+      footer {
+        position: fixed;
+        bottom: 10px;
+        left: 20px;
+        right: 20px;
+        font-size: 10px;
+      }
+      footer a {
+        font-size: 10px;
+        font-weight: bold;
+      }
     </style>
     <script type="text/javascript">
       document.addEventListener('DOMContentLoaded', function() {
@@ -48,5 +59,8 @@
     <section id="obtained">
       <p>Your access token is: <span id="access-token"></span></p>
     </section>
+    <footer>
+      We do not collect any information about your account - access token is visible only in your browser and is not sent to our servers. In case of any errors you can fill a bug report <a href="https://github.com/imanel/oitup/issues">here</a>.
+    </footer>
   </body>
 </html>
