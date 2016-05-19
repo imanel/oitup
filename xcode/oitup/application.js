@@ -196,7 +196,7 @@ var errorTemplate, listItemTemplate, listTemplate, loadingTemplate, loginTemplat
 
 errorTemplate = function(description) {
   var template;
-  template = "<?xml version='1.0' encoding='UTF-8' ?>\n<document>\n  <alertTemplate>\n    <title>" + (escapeHTML(description)) + "</title>\n    <description>You can find help at https://github.com/imanel/putio-tvos/issues</description>\n  </alertTemplate>\n</document>";
+  template = "<?xml version='1.0' encoding='UTF-8' ?>\n<document>\n  <alertTemplate>\n    <title>" + (escapeHTML(description)) + "</title>\n    <description>You can find help at https://github.com/imanel/oitup/issues</description>\n  </alertTemplate>\n</document>";
   return new DOMParser().parseFromString(template, 'application/xml');
 };
 
@@ -229,7 +229,7 @@ loadingTemplate = function(title) {
 
 loginTemplate = function() {
   var template;
-  template = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<document>\n  <formTemplate>\n    <banner>\n      <title>Put.io Login</title>\n      <description>In order to use Put.io you will need access token.<br />To obtain one please visit https://imanel.org/putio-tvos and follow instructions visible on screen.</description>\n    </banner>\n    <textField>Access Token</textField>\n    <footer>\n      <button>\n        <text>Login</text>\n      </button>\n    </footer>\n  </formTemplate>\n</document>";
+  template = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<document>\n  <formTemplate>\n    <banner>\n      <title>Put.io Login</title>\n      <description>In order to use Put.io you will need access token.<br />To obtain one please visit https://imanel.org/oitup and follow instructions visible on screen.</description>\n    </banner>\n    <textField>Access Token</textField>\n    <footer>\n      <button>\n        <text>Login</text>\n      </button>\n    </footer>\n  </formTemplate>\n</document>";
   return new DOMParser().parseFromString(template, "application/xml");
 };
 

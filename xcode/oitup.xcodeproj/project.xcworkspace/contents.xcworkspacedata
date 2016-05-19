@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:putio-tvos.xcodeproj">
+      location = "self:oitup.xcodeproj">
    </FileRef>
 </Workspace>
