@@ -5,8 +5,8 @@
   },
   "properties" : {
     "frame-size" : {
-      "width" : 1280,
-      "height" : 640
+      "width" : 600,
+      "height" : 600
     },
     "frame-center" : {
       "x" : 640,
