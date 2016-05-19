@@ -34,6 +34,8 @@ Xcode every time (just hit `Run` again).
 
 ## Changelog
 
+- v1.1.0
+  - Add automatic conversion of supported files
 - v1.0.0
   - First release
 
