@@ -13,7 +13,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		5993982F1CE3BAA900211C0D /* oitup.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "oitup.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5993982F1CE3BAA900211C0D /* Oitup.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Oitup.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		599398321CE3BAA900211C0D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		599398361CE3BAA900211C0D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		599398381CE3BAA900211C0D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -34,7 +34,7 @@
 		599398261CE3BAA900211C0D = {
 			isa = PBXGroup;
 			children = (
-				599398311CE3BAA900211C0D /* oitup */,
+				599398311CE3BAA900211C0D /* Oitup */,
 				599398301CE3BAA900211C0D /* Products */,
 			);
 			sourceTree = "<group>";
@@ -42,12 +42,12 @@
 		599398301CE3BAA900211C0D /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				5993982F1CE3BAA900211C0D /* oitup.app */,
+				5993982F1CE3BAA900211C0D /* Oitup.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		599398311CE3BAA900211C0D /* oitup */ = {
+		599398311CE3BAA900211C0D /* Oitup */ = {
 			isa = PBXGroup;
 			children = (
 				59A04CF31CEB9735008BE10F /* application.js */,
@@ -55,15 +55,15 @@
 				599398361CE3BAA900211C0D /* Assets.xcassets */,
 				599398381CE3BAA900211C0D /* Info.plist */,
 			);
-			path = "oitup";
+			path = Oitup;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		5993982E1CE3BAA900211C0D /* oitup */ = {
+		5993982E1CE3BAA900211C0D /* Oitup */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5993983B1CE3BAA900211C0D /* Build configuration list for PBXNativeTarget "oitup" */;
+			buildConfigurationList = 5993983B1CE3BAA900211C0D /* Build configuration list for PBXNativeTarget "Oitup" */;
 			buildPhases = (
 				5993982B1CE3BAA900211C0D /* Sources */,
 				5993982C1CE3BAA900211C0D /* Frameworks */,
@@ -73,9 +73,9 @@
 			);
 			dependencies = (
 			);
-			name = "oitup";
-			productName = "oitup";
-			productReference = 5993982F1CE3BAA900211C0D /* oitup.app */;
+			name = Oitup;
+			productName = Oitup;
+			productReference = 5993982F1CE3BAA900211C0D /* Oitup.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -94,7 +94,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 5993982A1CE3BAA900211C0D /* Build configuration list for PBXProject "oitup" */;
+			buildConfigurationList = 5993982A1CE3BAA900211C0D /* Build configuration list for PBXProject "Oitup" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -106,7 +106,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				5993982E1CE3BAA900211C0D /* oitup */,
+				5993982E1CE3BAA900211C0D /* Oitup */,
 			);
 		};
 /* End PBXProject section */
@@ -225,9 +225,9 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "iPhone Developer";
-				INFOPLIST_FILE = "oitup/Info.plist";
+				INFOPLIST_FILE = Oitup/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.imanel.oitup";
+				PRODUCT_BUNDLE_IDENTIFIER = org.imanel.oitup;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 			};
@@ -240,9 +240,9 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "iPhone Developer";
-				INFOPLIST_FILE = "oitup/Info.plist";
+				INFOPLIST_FILE = Oitup/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.imanel.oitup";
+				PRODUCT_BUNDLE_IDENTIFIER = org.imanel.oitup;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 			};
@@ -251,7 +251,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		5993982A1CE3BAA900211C0D /* Build configuration list for PBXProject "oitup" */ = {
+		5993982A1CE3BAA900211C0D /* Build configuration list for PBXProject "Oitup" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				599398391CE3BAA900211C0D /* Debug */,
@@ -260,7 +260,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5993983B1CE3BAA900211C0D /* Build configuration list for PBXNativeTarget "oitup" */ = {
+		5993983B1CE3BAA900211C0D /* Build configuration list for PBXNativeTarget "Oitup" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5993983C1CE3BAA900211C0D /* Debug */,

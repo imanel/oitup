@@ -1,6 +1,6 @@
 //
 //  AppDelegate.swift
-//  oitup
+//  Oitup
 //
 
 //  Copyright (c) 2016 Bernard Potocki. All rights reserved.
