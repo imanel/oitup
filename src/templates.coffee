@@ -1,14 +1,22 @@
-errorTemplate = (description) ->
+alertTemplate = (title, description) ->
   template = """
   <?xml version='1.0' encoding='UTF-8' ?>
   <document>
     <alertTemplate>
-      <title>#{ escapeHTML description }</title>
-      <description>You can find help at https://github.com/imanel/oitup/issues</description>
+      <title>#{ title }</title>
+      <description>#{ description }</description>
     </alertTemplate>
   </document>
   """
   new DOMParser().parseFromString(template, 'application/xml')
+
+convertingTemplate = (progress = 0) ->
+  title = "We're converting this file to format playable on Apple TV"
+  description = "This can take some time - please return later. <br />Progress: #{progress}%"
+  alertTemplate title, description
+
+errorTemplate = (description) ->
+  alertTemplate escapeHTML(description), 'You can find help at https://github.com/imanel/oitup/issues'
 
 listTemplate = (title, files) ->
   listHeader = """
@@ -45,6 +53,7 @@ listItemTemplate = (file) ->
       </lockup>
     </relatedContent>
     """
+    itemRelated += '<decorationImage src="resource://button-more" />' unless file.isPlayable
   else
     """
     <decorationImage src="resource://chevron" />

@@ -1,7 +1,7 @@
 class File
   @files = {}
 
-  constructor: (@downloader, object) ->
+  constructor: (object) ->
     @id = String(object.id)
     @constructor.files[@id] = @
 
@@ -21,24 +21,36 @@ class File
     @fileType != 'other'
 
   play: () ->
-    video = new MediaItem 'video', @downloader.urlForMovie(@id)
-    video.title = @name
-    video.artworkImageURL = @screenshot
-    video.resumeTime = @startFrom
+    if @isPlayable
+      video = new MediaItem 'video', App.downloader.urlForMovie(@id)
+      video.title = @name
+      video.artworkImageURL = @screenshot
+      video.resumeTime = @startFrom
 
-    player = new Player()
-    player.playlist = new Playlist()
-    player.playlist.push video
+      player = new Player()
+      player.playlist = new Playlist()
+      player.playlist.push video
 
-    player.addEventListener "timeDidChange", ((event) =>
-      @updateStartFrom event.time
-    ), { interval: 10 }
+      player.addEventListener "timeDidChange", ((event) =>
+        @updateStartFrom event.time
+      ), { interval: 10 }
 
-    player.play()
+      player.play()
+    else
+      loadingDocument = loadingTemplate()
+      navigationDocument.pushDocument loadingDocument
+      App.downloader.downloadMP4Status @id, (response) =>
+        if response.status == 'COMPLETED'
+          @isPlayable = true
+          navigationDocument.popDocument()
+          @play()
+        else
+          App.downloader.convertMP4 @id if response.status == 'NOT_AVAILABLE'
+          navigationDocument.replaceDocument convertingTemplate(response.percent_done || 0), loadingDocument
 
   updateStartFrom: (time) ->
     @startFrom = time
-    @downloader.setStartFrom @id, time
+    App.downloader.setStartFrom @id, time
 
   calculateDuration: (duration) ->
     hours = parseInt( duration / 3600 )

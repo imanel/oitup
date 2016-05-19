@@ -50,25 +50,27 @@ Downloader = (function() {
     return this.urlFor('/files/' + fileId + '/start-from/set');
   };
 
-  Downloader.prototype.download = function(url, callback) {
-    var downloadRequest, self;
+  Downloader.prototype.urlForMP4Status = function(fileId) {
+    return this.urlFor('/files/' + fileId + '/mp4');
+  };
+
+  Downloader.prototype.urlForMP4Convert = function(fileId) {
+    return this.urlForMP4Status(fileId);
+  };
+
+  Downloader.prototype.download = function(url, callback, method) {
+    var downloadRequest;
+    if (method == null) {
+      method = 'GET';
+    }
     console.log("Downloading: " + url);
-    self = this;
     downloadRequest = new XMLHttpRequest();
-    downloadRequest.open('GET', url);
+    downloadRequest.open(method, url);
     downloadRequest.responseType = 'json';
     downloadRequest.onload = function() {
-      var files, json, parentName;
+      var json;
       json = JSON.parse(this.responseText);
-      parentName = json.parent.name;
-      files = json.files.map((function(_this) {
-        return function(f) {
-          return new File(self, f);
-        };
-      })(this));
-      return callback(parentName, files.filter(function(f) {
-        return f.isUsable();
-      }));
+      return callback(json);
     };
     downloadRequest.onerror = function() {
       var errorMessage, json;
@@ -85,7 +87,26 @@ Downloader = (function() {
   };
 
   Downloader.prototype.downloadList = function(parentId, callback) {
-    return this.download(this.urlForList(parentId), callback);
+    return this.download(this.urlForList(parentId), function(json) {
+      var files, parentName;
+      parentName = json.parent.name;
+      files = json.files.map(function(f) {
+        return new File(f);
+      });
+      return callback(parentName, files.filter(function(f) {
+        return f.isUsable();
+      }));
+    });
+  };
+
+  Downloader.prototype.downloadMP4Status = function(fileId, callback) {
+    return this.download(this.urlForMP4Status(fileId), function(json) {
+      return callback(json.mp4);
+    });
+  };
+
+  Downloader.prototype.convertMP4 = function(fileId) {
+    return this.download(this.urlForMP4Convert(fileId), (function() {}), 'POST');
   };
 
   Downloader.prototype.setStartFrom = function(fileId, time) {
@@ -106,9 +127,8 @@ var File;
 File = (function() {
   File.files = {};
 
-  function File(downloader, object) {
+  function File(object) {
     var ref;
-    this.downloader = downloader;
     this.id = String(object.id);
     this.constructor.files[this.id] = this;
     this.name = object.name;
@@ -135,27 +155,46 @@ File = (function() {
   };
 
   File.prototype.play = function() {
-    var player, video;
-    video = new MediaItem('video', this.downloader.urlForMovie(this.id));
-    video.title = this.name;
-    video.artworkImageURL = this.screenshot;
-    video.resumeTime = this.startFrom;
-    player = new Player();
-    player.playlist = new Playlist();
-    player.playlist.push(video);
-    player.addEventListener("timeDidChange", ((function(_this) {
-      return function(event) {
-        return _this.updateStartFrom(event.time);
-      };
-    })(this)), {
-      interval: 10
-    });
-    return player.play();
+    var loadingDocument, player, video;
+    if (this.isPlayable) {
+      video = new MediaItem('video', App.downloader.urlForMovie(this.id));
+      video.title = this.name;
+      video.artworkImageURL = this.screenshot;
+      video.resumeTime = this.startFrom;
+      player = new Player();
+      player.playlist = new Playlist();
+      player.playlist.push(video);
+      player.addEventListener("timeDidChange", ((function(_this) {
+        return function(event) {
+          return _this.updateStartFrom(event.time);
+        };
+      })(this)), {
+        interval: 10
+      });
+      return player.play();
+    } else {
+      loadingDocument = loadingTemplate();
+      navigationDocument.pushDocument(loadingDocument);
+      return App.downloader.downloadMP4Status(this.id, (function(_this) {
+        return function(response) {
+          if (response.status === 'COMPLETED') {
+            _this.isPlayable = true;
+            navigationDocument.popDocument();
+            return _this.play();
+          } else {
+            if (response.status === 'NOT_AVAILABLE') {
+              App.downloader.convertMP4(_this.id);
+            }
+            return navigationDocument.replaceDocument(convertingTemplate(response.percent_done || 0), loadingDocument);
+          }
+        };
+      })(this));
+    }
   };
 
   File.prototype.updateStartFrom = function(time) {
     this.startFrom = time;
-    return this.downloader.setStartFrom(this.id, time);
+    return App.downloader.setStartFrom(this.id, time);
   };
 
   File.prototype.calculateDuration = function(duration) {
@@ -192,12 +231,26 @@ File = (function() {
 
 })();
 
-var errorTemplate, listItemTemplate, listTemplate, loadingTemplate, loginTemplate;
+var alertTemplate, convertingTemplate, errorTemplate, listItemTemplate, listTemplate, loadingTemplate, loginTemplate;
+
+alertTemplate = function(title, description) {
+  var template;
+  template = "<?xml version='1.0' encoding='UTF-8' ?>\n<document>\n  <alertTemplate>\n    <title>" + title + "</title>\n    <description>" + description + "</description>\n  </alertTemplate>\n</document>";
+  return new DOMParser().parseFromString(template, 'application/xml');
+};
+
+convertingTemplate = function(progress) {
+  var description, title;
+  if (progress == null) {
+    progress = 0;
+  }
+  title = "We're converting this file to format playable on Apple TV";
+  description = "This can take some time - please return later. <br />Progress: " + progress + "%";
+  return alertTemplate(title, description);
+};
 
 errorTemplate = function(description) {
-  var template;
-  template = "<?xml version='1.0' encoding='UTF-8' ?>\n<document>\n  <alertTemplate>\n    <title>" + (escapeHTML(description)) + "</title>\n    <description>You can find help at https://github.com/imanel/oitup/issues</description>\n  </alertTemplate>\n</document>";
-  return new DOMParser().parseFromString(template, 'application/xml');
+  return alertTemplate(escapeHTML(description), 'You can find help at https://github.com/imanel/oitup/issues');
 };
 
 listTemplate = function(title, files) {
@@ -213,7 +266,7 @@ listTemplate = function(title, files) {
 listItemTemplate = function(file) {
   var itemFooter, itemHeader, itemRelated;
   itemHeader = "<listItemLockup id='" + file.id + "'>\n  <title>" + file.name + "</title>\n  <img src=\"" + file.icon + "\" width=\"60\" height=\"60\" />";
-  itemRelated = file.fileType === 'movie' ? "<relatedContent>\n  <lockup>\n    <img src=\"" + file.screenshot + "\" />\n    <description>" + file.name + "<br />" + file.duration + "<br />" + file.size + "</description>\n  </lockup>\n</relatedContent>" : "<decorationImage src=\"resource://chevron\" />\n<relatedContent>\n  <lockup>\n  </lockup>\n</relatedContent>";
+  itemRelated = file.fileType === 'movie' ? ("<relatedContent>\n  <lockup>\n    <img src=\"" + file.screenshot + "\" />\n    <description>" + file.name + "<br />" + file.duration + "<br />" + file.size + "</description>\n  </lockup>\n</relatedContent>", !file.isPlayable ? itemRelated += '<decorationImage src="resource://button-more" />' : void 0) : "<decorationImage src=\"resource://chevron\" />\n<relatedContent>\n  <lockup>\n  </lockup>\n</relatedContent>";
   itemFooter = '</listItemLockup>';
   return itemHeader + itemRelated + itemFooter;
 };

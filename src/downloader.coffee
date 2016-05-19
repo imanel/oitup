@@ -18,17 +18,20 @@ class Downloader
   urlForSetStartFrom: (fileId) ->
     @urlFor '/files/' + fileId + '/start-from/set'
 
-  download: (url, callback) ->
+  urlForMP4Status: (fileId) ->
+    @urlFor '/files/' + fileId + '/mp4'
+
+  urlForMP4Convert: (fileId) ->
+    @urlForMP4Status fileId
+
+  download: (url, callback, method = 'GET') ->
     console.log "Downloading: " + url
-    self = @
     downloadRequest = new XMLHttpRequest()
-    downloadRequest.open 'GET', url
+    downloadRequest.open method, url
     downloadRequest.responseType = 'json'
     downloadRequest.onload = ->
       json = JSON.parse(@responseText)
-      parentName = json.parent.name
-      files = json.files.map (f) => new File(self, f)
-      callback parentName, files.filter (f) -> f.isUsable()
+      callback json
     downloadRequest.onerror = ->
       console.log "Error: " + @responseText
       json = JSON.parse(@responseText)
@@ -40,7 +43,17 @@ class Downloader
     downloadRequest.send()
 
   downloadList: (parentId, callback) ->
-    @download @urlForList(parentId), callback
+    @download @urlForList(parentId), (json) ->
+      parentName = json.parent.name
+      files = json.files.map (f) -> new File(f)
+      callback parentName, files.filter (f) -> f.isUsable()
+
+  downloadMP4Status: (fileId, callback) ->
+    @download @urlForMP4Status(fileId), (json) ->
+      callback json.mp4
+
+  convertMP4: (fileId) ->
+    @download @urlForMP4Convert(fileId), (->), 'POST'
 
   setStartFrom: (fileId, time) ->
     url = @urlForSetStartFrom fileId
