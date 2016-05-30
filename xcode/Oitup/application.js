@@ -264,9 +264,9 @@ listTemplate = function(title, files) {
 };
 
 listItemTemplate = function(file) {
-  var itemFooter, itemHeader, itemRelated;
+  var itemFooter, itemHeader, itemRelated, result;
   itemHeader = "<listItemLockup id='" + file.id + "'>\n  <title>" + file.name + "</title>\n  <img src=\"" + file.icon + "\" width=\"60\" height=\"60\" />";
-  itemRelated = file.fileType === 'movie' ? ("<relatedContent>\n  <lockup>\n    <img src=\"" + file.screenshot + "\" />\n    <description>" + file.name + "<br />" + file.duration + "<br />" + file.size + "</description>\n  </lockup>\n</relatedContent>", !file.isPlayable ? itemRelated += '<decorationImage src="resource://button-more" />' : void 0) : "<decorationImage src=\"resource://chevron\" />\n<relatedContent>\n  <lockup>\n  </lockup>\n</relatedContent>";
+  itemRelated = file.fileType === 'movie' ? (result = "<relatedContent>\n  <lockup>\n    <img src=\"" + file.screenshot + "\" />\n    <description>" + file.name + "<br />" + file.duration + "<br />" + file.size + "</description>\n  </lockup>\n</relatedContent>", !file.isPlayable ? result += '<decorationImage src="resource://button-more" />' : void 0, result) : "<decorationImage src=\"resource://chevron\" />\n<relatedContent>\n  <lockup>\n  </lockup>\n</relatedContent>";
   itemFooter = '</listItemLockup>';
   return itemHeader + itemRelated + itemFooter;
 };

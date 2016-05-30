@@ -45,7 +45,7 @@ listItemTemplate = (file) ->
     <img src="#{ file.icon }" width="60" height="60" />
   """
   itemRelated = if file.fileType == 'movie'
-    """
+    result = """
     <relatedContent>
       <lockup>
         <img src="#{ file.screenshot }" />
@@ -53,7 +53,8 @@ listItemTemplate = (file) ->
       </lockup>
     </relatedContent>
     """
-    itemRelated += '<decorationImage src="resource://button-more" />' unless file.isPlayable
+    result += '<decorationImage src="resource://button-more" />' unless file.isPlayable
+    result
   else
     """
     <decorationImage src="resource://chevron" />
