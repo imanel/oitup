@@ -6,15 +6,21 @@ class File
     @constructor.files[@id] = @
 
     @name = object.name
-    @icon = object.icon
-    @screenshot = object.screenshot
     @startFrom = object.start_from
     @size = @calculateSize(object.mp4_size || object.size)
     @isPlayable = object.is_mp4_available || object.content_type == 'video/mp4'
-    @fileType = switch object.file_type
-                  when 'FOLDER' then 'directory'
-                  when 'VIDEO' then 'movie'
-                  else 'other'
+
+    switch object.file_type
+      when 'VIDEO'
+        @fileType = 'movie'
+        @icon = object.icon
+        @screenshot = object.screenshot
+      when 'FOLDER'
+        @fileType = 'directory'
+        @icon = App.location + 'folder_icon.png'
+        @screenshot = App.location + 'folder_screenshot.png'
+      else
+        @fileType = 'other'
 
   isUsable: () ->
     @fileType != 'other'

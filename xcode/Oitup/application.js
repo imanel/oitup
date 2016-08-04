@@ -1,4 +1,6 @@
 App.onLaunch = function(options) {
+  this.location = options.location;
+  this.location = this.location.substring(0, this.location.indexOf('application.js'));
   this.downloader = new Downloader(localStorage.getItem('putioAccessToken'));
   return downloadList(null);
 };
@@ -131,21 +133,23 @@ File = (function() {
     this.id = String(object.id);
     this.constructor.files[this.id] = this;
     this.name = object.name;
-    this.icon = object.icon;
-    this.screenshot = object.screenshot;
     this.startFrom = object.start_from;
     this.size = this.calculateSize(object.mp4_size || object.size);
     this.isPlayable = object.is_mp4_available || object.content_type === 'video/mp4';
-    this.fileType = (function() {
-      switch (object.file_type) {
-        case 'FOLDER':
-          return 'directory';
-        case 'VIDEO':
-          return 'movie';
-        default:
-          return 'other';
-      }
-    })();
+    switch (object.file_type) {
+      case 'VIDEO':
+        this.fileType = 'movie';
+        this.icon = object.icon;
+        this.screenshot = object.screenshot;
+        break;
+      case 'FOLDER':
+        this.fileType = 'directory';
+        this.icon = App.location + 'folder_icon.png';
+        this.screenshot = App.location + 'folder_screenshot.png';
+        break;
+      default:
+        this.fileType = 'other';
+    }
   }
 
   File.prototype.isUsable = function() {
@@ -253,7 +257,7 @@ listTemplate = function(title, files) {
 listItemTemplate = function(file) {
   var itemFooter, itemHeader, itemRelated, result;
   itemHeader = "<listItemLockup id='" + file.id + "'>\n  <title>" + file.name + "</title>\n  <img src=\"" + file.icon + "\" width=\"60\" height=\"60\" />";
-  itemRelated = file.fileType === 'movie' ? (result = "<relatedContent>\n  <lockup>\n    <img src=\"" + file.screenshot + "\" />\n    <description style=\"tv-text-style: none; font-size: 40;\">" + file.name + "<br /><br />File Size: " + file.size + "</description>\n  </lockup>\n</relatedContent>", !file.isPlayable ? result += '<decorationImage src="resource://button-more" />' : void 0, result) : "<decorationImage src=\"resource://chevron\" />\n<relatedContent>\n  <lockup>\n  </lockup>\n</relatedContent>";
+  itemRelated = file.fileType === 'movie' ? (result = "<relatedContent>\n  <lockup>\n    <img src=\"" + file.screenshot + "\" />\n    <description style=\"tv-text-style: none; font-size: 40;\">" + file.name + "<br /><br />File Size: " + file.size + "</description>\n  </lockup>\n</relatedContent>", !file.isPlayable ? result += '<decorationImage src="resource://button-more" />' : void 0, result) : "<decorationImage src=\"resource://chevron\" />\n<relatedContent>\n  <lockup>\n    <img src=\"" + file.screenshot + "\" />\n    <description style=\"tv-text-style: none; font-size: 40;\">" + file.name + "</description>\n  </lockup>\n</relatedContent>";
   itemFooter = '</listItemLockup>';
   return itemHeader + itemRelated + itemFooter;
 };

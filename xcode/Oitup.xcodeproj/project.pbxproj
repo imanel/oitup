@@ -10,6 +10,8 @@
 		599398331CE3BAA900211C0D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 599398321CE3BAA900211C0D /* AppDelegate.swift */; };
 		599398371CE3BAA900211C0D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 599398361CE3BAA900211C0D /* Assets.xcassets */; };
 		59A04CF41CEB9735008BE10F /* application.js in Resources */ = {isa = PBXBuildFile; fileRef = 59A04CF31CEB9735008BE10F /* application.js */; };
+		59B858A91D53136F0040AE2B /* folder_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 59B858A81D53136F0040AE2B /* folder_icon.png */; };
+		59B858AB1D5318D40040AE2B /* folder_screenshot.png in Resources */ = {isa = PBXBuildFile; fileRef = 59B858AA1D5318D40040AE2B /* folder_screenshot.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -18,6 +20,8 @@
 		599398361CE3BAA900211C0D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		599398381CE3BAA900211C0D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		59A04CF31CEB9735008BE10F /* application.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = application.js; sourceTree = "<group>"; };
+		59B858A81D53136F0040AE2B /* folder_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = folder_icon.png; sourceTree = "<group>"; };
+		59B858AA1D5318D40040AE2B /* folder_screenshot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = folder_screenshot.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +57,8 @@
 				59A04CF31CEB9735008BE10F /* application.js */,
 				599398321CE3BAA900211C0D /* AppDelegate.swift */,
 				599398361CE3BAA900211C0D /* Assets.xcassets */,
+				59B858A81D53136F0040AE2B /* folder_icon.png */,
+				59B858AA1D5318D40040AE2B /* folder_screenshot.png */,
 				599398381CE3BAA900211C0D /* Info.plist */,
 			);
 			path = Oitup;
@@ -117,7 +123,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				599398371CE3BAA900211C0D /* Assets.xcassets in Resources */,
+				59B858AB1D5318D40040AE2B /* folder_screenshot.png in Resources */,
 				59A04CF41CEB9735008BE10F /* application.js in Resources */,
+				59B858A91D53136F0040AE2B /* folder_icon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

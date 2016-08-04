@@ -60,6 +60,8 @@ listItemTemplate = (file) ->
     <decorationImage src="resource://chevron" />
     <relatedContent>
       <lockup>
+        <img src="#{ file.screenshot }" />
+        <description style="tv-text-style: none; font-size: 40;">#{ file.name }</description>
       </lockup>
     </relatedContent>
     """

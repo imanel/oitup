@@ -1,4 +1,6 @@
 App.onLaunch = (options) ->
+  @location = options.location
+  @location = @location.substring 0, @location.indexOf('application.js')
   @downloader = new Downloader localStorage.getItem('putioAccessToken')
   downloadList null
 
