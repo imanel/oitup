@@ -136,7 +136,7 @@ File = (function() {
     this.screenshot = object.screenshot;
     this.startFrom = object.start_from;
     this.duration = this.calculateDuration((ref = object.video_metadata) != null ? ref.duration : void 0);
-    this.size = this.calculateSize(object.size);
+    this.size = this.calculateSize(object.mp4_size || object.size);
     this.isPlayable = object.is_mp4_available || object.content_type === 'video/mp4';
     this.fileType = (function() {
       switch (object.file_type) {

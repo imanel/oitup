@@ -10,7 +10,7 @@ class File
     @screenshot = object.screenshot
     @startFrom = object.start_from
     @duration = @calculateDuration(object.video_metadata?.duration)
-    @size = @calculateSize(object.size)
+    @size = @calculateSize(object.mp4_size || object.size)
     @isPlayable = object.is_mp4_available || object.content_type == 'video/mp4'
     @fileType = switch object.file_type
                   when 'FOLDER' then 'directory'
