@@ -128,14 +128,12 @@ File = (function() {
   File.files = {};
 
   function File(object) {
-    var ref;
     this.id = String(object.id);
     this.constructor.files[this.id] = this;
     this.name = object.name;
     this.icon = object.icon;
     this.screenshot = object.screenshot;
     this.startFrom = object.start_from;
-    this.duration = this.calculateDuration((ref = object.video_metadata) != null ? ref.duration : void 0);
     this.size = this.calculateSize(object.mp4_size || object.size);
     this.isPlayable = object.is_mp4_available || object.content_type === 'video/mp4';
     this.fileType = (function() {
@@ -197,17 +195,6 @@ File = (function() {
     return App.downloader.setStartFrom(this.id, time);
   };
 
-  File.prototype.calculateDuration = function(duration) {
-    var hours, minutes, result;
-    hours = parseInt(duration / 3600);
-    minutes = parseInt(duration / 60) % 60;
-    result = "";
-    if (hours > 0) {
-      result += hours + " hr ";
-    }
-    return result + minutes + " min";
-  };
-
   File.prototype.calculateSize = function(size) {
     var gb, kb, mb, tb;
     kb = (size / 1024).toFixed(1);
@@ -266,7 +253,7 @@ listTemplate = function(title, files) {
 listItemTemplate = function(file) {
   var itemFooter, itemHeader, itemRelated, result;
   itemHeader = "<listItemLockup id='" + file.id + "'>\n  <title>" + file.name + "</title>\n  <img src=\"" + file.icon + "\" width=\"60\" height=\"60\" />";
-  itemRelated = file.fileType === 'movie' ? (result = "<relatedContent>\n  <lockup>\n    <img src=\"" + file.screenshot + "\" />\n    <description>" + file.name + "<br />" + file.duration + "<br />" + file.size + "</description>\n  </lockup>\n</relatedContent>", !file.isPlayable ? result += '<decorationImage src="resource://button-more" />' : void 0, result) : "<decorationImage src=\"resource://chevron\" />\n<relatedContent>\n  <lockup>\n  </lockup>\n</relatedContent>";
+  itemRelated = file.fileType === 'movie' ? (result = "<relatedContent>\n  <lockup>\n    <img src=\"" + file.screenshot + "\" />\n    <description>" + file.name + "<br /><br />File size: " + file.size + "</description>\n  </lockup>\n</relatedContent>", !file.isPlayable ? result += '<decorationImage src="resource://button-more" />' : void 0, result) : "<decorationImage src=\"resource://chevron\" />\n<relatedContent>\n  <lockup>\n  </lockup>\n</relatedContent>";
   itemFooter = '</listItemLockup>';
   return itemHeader + itemRelated + itemFooter;
 };

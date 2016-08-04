@@ -9,7 +9,6 @@ class File
     @icon = object.icon
     @screenshot = object.screenshot
     @startFrom = object.start_from
-    @duration = @calculateDuration(object.video_metadata?.duration)
     @size = @calculateSize(object.mp4_size || object.size)
     @isPlayable = object.is_mp4_available || object.content_type == 'video/mp4'
     @fileType = switch object.file_type
@@ -51,13 +50,6 @@ class File
   updateStartFrom: (time) ->
     @startFrom = time
     App.downloader.setStartFrom @id, time
-
-  calculateDuration: (duration) ->
-    hours = parseInt( duration / 3600 )
-    minutes = parseInt( duration / 60 ) % 60
-    result = ""
-    result += hours + " hr " if hours > 0
-    result + minutes + " min"
 
   calculateSize: (size) ->
     kb = ( size / 1024 ).toFixed 1
