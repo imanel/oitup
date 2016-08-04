@@ -222,7 +222,7 @@ File = (function() {
 
 })();
 
-var alertTemplate, convertingTemplate, errorTemplate, listItemTemplate, listTemplate, loadingTemplate, loginTemplate;
+var alertTemplate, convertingTemplate, emptyListItemTemplate, errorTemplate, listItemTemplate, listTemplate, loadingTemplate, loginTemplate;
 
 alertTemplate = function(title, description) {
   var template;
@@ -248,9 +248,9 @@ listTemplate = function(title, files) {
   var list, listFooter, listHeader;
   listHeader = "<?xml version='1.0' encoding='UTF-8' ?>\n  <document>\n  <listTemplate>\n    <list>\n      <header>\n        <title>" + title + "</title>\n      </header>\n      <section>";
   listFooter = "      </section>\n    </list>\n  </listTemplate>\n</document>";
-  list = files.map(function(file) {
+  list = files.length > 0 ? files.map(function(file) {
     return listItemTemplate(file);
-  });
+  }) : [emptyListItemTemplate()];
   return new DOMParser().parseFromString(listHeader + list.join('') + listFooter, 'application/xml');
 };
 
@@ -260,6 +260,10 @@ listItemTemplate = function(file) {
   itemRelated = file.fileType === 'movie' ? (result = "<relatedContent>\n  <lockup>\n    <img src=\"" + file.screenshot + "\" />\n    <description style=\"tv-text-style: none; font-size: 40;\">" + file.name + "<br /><br />File Size: " + file.size + "</description>\n  </lockup>\n</relatedContent>", !file.isPlayable ? result += '<decorationImage src="resource://button-more" />' : void 0, result) : "<decorationImage src=\"resource://chevron\" />\n<relatedContent>\n  <lockup>\n    <img src=\"" + file.screenshot + "\" />\n    <description style=\"tv-text-style: none; font-size: 40;\">" + file.name + "</description>\n  </lockup>\n</relatedContent>";
   itemFooter = '</listItemLockup>';
   return itemHeader + itemRelated + itemFooter;
+};
+
+emptyListItemTemplate = function() {
+  return "<listItemLockup>\n  <title>Folder is empty</title>\n</listItemLockup>";
 };
 
 loadingTemplate = function(title) {

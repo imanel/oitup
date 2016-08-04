@@ -35,7 +35,10 @@ listTemplate = (title, files) ->
     </listTemplate>
   </document>
   """
-  list = files.map (file) -> listItemTemplate(file)
+  list = if files.length > 0
+    files.map (file) -> listItemTemplate(file)
+  else
+    [emptyListItemTemplate()]
   new DOMParser().parseFromString(listHeader + list.join('') + listFooter, 'application/xml')
 
 listItemTemplate = (file) ->
@@ -67,6 +70,13 @@ listItemTemplate = (file) ->
     """
   itemFooter = '</listItemLockup>'
   itemHeader + itemRelated + itemFooter
+
+emptyListItemTemplate = () ->
+  """
+  <listItemLockup>
+    <title>Folder is empty</title>
+  </listItemLockup>
+  """
 
 loadingTemplate = (title = 'Loading...') ->
     template = """
