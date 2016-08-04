@@ -13,8 +13,8 @@ class File
     @size = @calculateSize(object.size)
     @isPlayable = object.is_mp4_available || object.content_type == 'video/mp4'
     @fileType = switch object.file_type
-                  when 0 then 'directory'
-                  when 3 then 'movie'
+                  when 'FOLDER' then 'directory'
+                  when 'VIDEO' then 'movie'
                   else 'other'
 
   isUsable: () ->

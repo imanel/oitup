@@ -140,9 +140,9 @@ File = (function() {
     this.isPlayable = object.is_mp4_available || object.content_type === 'video/mp4';
     this.fileType = (function() {
       switch (object.file_type) {
-        case 0:
+        case 'FOLDER':
           return 'directory';
-        case 3:
+        case 'VIDEO':
           return 'movie';
         default:
           return 'other';
