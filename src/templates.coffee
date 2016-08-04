@@ -22,6 +22,16 @@ listTemplate = (title, files) ->
   listHeader = """
   <?xml version='1.0' encoding='UTF-8' ?>
     <document>
+    <head>
+      <style>
+        .description {
+          tv-text-style: none;
+          tv-text-max-lines: 7;
+          font-size: 40;
+          color: rgba(100, 100, 100);
+        }
+      </style>
+    </head>
     <listTemplate>
       <list>
         <header>
@@ -52,7 +62,7 @@ listItemTemplate = (file) ->
     <relatedContent>
       <lockup>
         <img src="#{ file.screenshot }" />
-        <description style="tv-text-style: none; font-size: 40;">#{ file.name }<br /><br />File Size: #{ file.size }</description>
+        <description class="description">#{ file.name }<br /><br />File Size: #{ file.size }</description>
       </lockup>
     </relatedContent>
     """
@@ -64,7 +74,7 @@ listItemTemplate = (file) ->
     <relatedContent>
       <lockup>
         <img src="#{ file.screenshot }" />
-        <description style="tv-text-style: none; font-size: 40;">#{ file.name }</description>
+        <description class="description">#{ file.name }</description>
       </lockup>
     </relatedContent>
     """
