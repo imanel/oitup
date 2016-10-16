@@ -8,7 +8,7 @@ class Downloader {
   }
 
   get accessToken() {
-    return localStorage.getItem('putioAccessToken')
+    return userDefaults.getItem('putioAccessToken')
   }
 
   urlFor(path) {

@@ -58,7 +58,7 @@ export const login = function() {
 export const handleLogin = function(tokenField) {
   var token;
   token = tokenField.getFeature('Keyboard').text;
-  localStorage.setItem('putioAccessToken', token);
+  userDefaults.setItem('putioAccessToken', token);
   navigationDocument.clear();
   return downloadList(null);
 };
