@@ -1,5 +1,5 @@
+import ErrorMessage from './components/ErrorMessage'
 import File from './file'
-import { errorTemplate } from './templates'
 import { login } from './utils'
 
 const baseURL = 'https://api.put.io/v2'
@@ -61,7 +61,7 @@ const download = (url, callback, method) => {
       return login();
     } else {
       errorMessage = "Error code: " + json.status_code + ", message: " + json.error;
-      return navigationDocument.replaceDocument(errorTemplate(errorMessage), navigationDocument.documents.slice(-1)[0]);
+      return navigationDocument.replaceDocument(ErrorMessage(errorMessage), navigationDocument.documents.slice(-1)[0]);
     }
   };
   return downloadRequest.send();

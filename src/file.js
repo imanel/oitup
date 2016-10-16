@@ -1,5 +1,6 @@
+import Converting from './components/Converting'
+import Loading from './components/Loading'
 import Downloader from './downloader'
-import { convertingTemplate, loadingTemplate } from './templates'
 
 class File {
   constructor(object) {
@@ -48,7 +49,7 @@ class File {
       });
       return player.play();
     } else {
-      loadingDocument = loadingTemplate();
+      loadingDocument = Loading();
       navigationDocument.pushDocument(loadingDocument);
       return Downloader.downloadMP4Status(this.id, (function(_this) {
         return function(response) {
@@ -60,7 +61,7 @@ class File {
             if (response.status === 'NOT_AVAILABLE') {
               Downloader.convertMP4(_this.id);
             }
-            return navigationDocument.replaceDocument(convertingTemplate(response.percent_done || 0), loadingDocument);
+            return navigationDocument.replaceDocument(Converting(response.percent_done || 0), loadingDocument);
           }
         };
       })(this));

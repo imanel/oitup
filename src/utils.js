@@ -1,14 +1,16 @@
+import ItemList from './components/ItemList'
+import Loading from './components/Loading'
+import Login from './components/Login'
 import Downloader from './downloader'
 import File from './file'
-import { listTemplate, loadingTemplate, loginTemplate } from './templates'
 
 export const downloadList = function(listId) {
   var loadingDocument;
-  loadingDocument = loadingTemplate();
+  loadingDocument = Loading();
   navigationDocument.pushDocument(loadingDocument);
   return Downloader.downloadList(listId, function(header, files) {
     var list;
-    list = listTemplate(header, files);
+    list = ItemList(header, files);
     list.addEventListener("select", selectFile);
     list.addEventListener("play", selectFile);
     if (loadingDocument) {
@@ -44,7 +46,7 @@ export const escapeHTML = function(string) {
 
 export const login = function() {
   var loginView, tokenField;
-  loginView = loginTemplate();
+  loginView = Login();
   tokenField = loginView.getElementsByTagName('textField').item(0);
   loginView.addEventListener("select", function() {
     return handleLogin(tokenField);
