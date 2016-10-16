@@ -1,56 +1,127 @@
-export const alertTemplate = function(title, description) {
-  var template;
-  template = "<?xml version='1.0' encoding='UTF-8' ?>\n<document>\n  <alertTemplate>\n    <title>" + title + "</title>\n    <description>" + description + "</description>\n  </alertTemplate>\n</document>";
-  return new DOMParser().parseFromString(template, 'application/xml');
-};
+export const alertTemplate = (title, description) => {
+  const template = `<?xml version='1.0' encoding='UTF-8' ?>
+    <document>
+      <alertTemplate>
+        <title>${title}</title>
+        <description>${description}</description>
+      </alertTemplate>
+    </document>"
+  `
+  return new DOMParser().parseFromString(template, 'application/xml')
+}
 
-export const convertingTemplate = function(progress) {
-  var description, title;
-  if (progress == null) {
-    progress = 0;
+export const convertingTemplate = (progress = 0) => {
+  const title = "We're converting this file to format playable on Apple TV"
+  const description = `This can take some time - please return later. <br />Progress: ${progress}%`
+  return alertTemplate(title, description)
+}
+
+export const errorTemplate = (title) => {
+  const description = 'You can find help at https://github.com/imanel/oitup/issues'
+  return alertTemplate(escapeHTML(title), description)
+}
+
+export const listTemplate = (title, files) => {
+  let listBody
+  if (files.length > 0) {
+    listBody = files.map(file => listItemTemplate(file)).join('')
+  } else {
+    listBody = emptyListItemTemplate()
   }
-  title = "We're converting this file to format playable on Apple TV";
-  description = "This can take some time - please return later. <br />Progress: " + progress + "%";
-  return alertTemplate(title, description);
-};
+  const template = `<?xml version='1.0' encoding='UTF-8' ?>
+    <document>
+      <head>
+        <style>
+          .description {
+            tv-text-style: none;
+            tv-text-max-lines: 7;
+            font-size: 40;
+            color: rgba(100, 100, 100);
+          }
+        </style>
+      </head>
+      <listTemplate>
+        <list>
+          <header>
+            <title>${title}</title>
+          </header>
+          <section>
+            ${listBody}
+          </section>
+        </list>
+      </listTemplate>
+    </document>
+  `
 
-export const errorTemplate = function(description) {
-  return alertTemplate(escapeHTML(description), 'You can find help at https://github.com/imanel/oitup/issues');
-};
+  return new DOMParser().parseFromString(template, 'application/xml')
+}
 
-export const listTemplate = function(title, files) {
-  var list, listFooter, listHeader;
-  listHeader = "<?xml version='1.0' encoding='UTF-8' ?>\n  <document>\n  <head>\n    <style>\n      .description {\n        tv-text-style: none;\n        tv-text-max-lines: 7;\n        font-size: 40;\n        color: rgba(100, 100, 100);\n      }\n    </style>\n  </head>\n  <listTemplate>\n    <list>\n      <header>\n        <title>" + title + "</title>\n      </header>\n      <section>";
-  listFooter = "      </section>\n    </list>\n  </listTemplate>\n</document>";
-  list = files.length > 0 ? files.map(function(file) {
-    return listItemTemplate(file);
-  }) : [emptyListItemTemplate()];
-  return new DOMParser().parseFromString(listHeader + list.join('') + listFooter, 'application/xml');
-};
-
-export const listItemTemplate = function(file) {
-  var itemFooter, itemHeader, itemRelated, result;
-  itemHeader = "<listItemLockup id='" + file.id + "'>\n  <title>" + file.name + "</title>\n  <img src=\"" + file.icon + "\" width=\"60\" height=\"60\" />";
-  itemRelated = file.fileType === 'movie' ? (result = "<relatedContent>\n  <lockup>\n    <img src=\"" + file.screenshot + "\" />\n    <description class=\"description\">" + file.name + "<br /><br />File Size: " + file.size + "</description>\n  </lockup>\n</relatedContent>", !file.isPlayable ? result += '<decorationImage src="resource://button-more" />' : void 0, result) : "<decorationImage src=\"resource://chevron\" />\n<relatedContent>\n  <lockup>\n    <img src=\"" + file.screenshot + "\" />\n    <description class=\"description\">" + file.name + "</description>\n  </lockup>\n</relatedContent>";
-  itemFooter = '</listItemLockup>';
-  return itemHeader + itemRelated + itemFooter;
-};
-
-export const emptyListItemTemplate = function() {
-  return "<listItemLockup>\n  <title>Folder is empty</title>\n</listItemLockup>";
-};
-
-export const loadingTemplate = function(title) {
-  var template;
-  if (title == null) {
-    title = 'Loading...';
+const listItemTemplate = (file) => {
+  let decorationImage = ""
+  if (file.fileType !== 'movie') {
+    decorationImage = '<decorationImage src="resource://chevron" />'
+  } else if (!file.isPlayable) {
+    decorationImage = '<decorationImage src="resource://button-more" />'
   }
-  template = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n  <document>\n    <loadingTemplate>\n      <activityIndicator>\n        <title>" + title + "</title>\n      </activityIndicator>\n    </loadingTemplate>\n  </document>";
-  return new DOMParser().parseFromString(template, "application/xml");
-};
 
-export const loginTemplate = function() {
-  var template;
-  template = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<document>\n  <formTemplate>\n    <banner>\n      <title>Put.io Login</title>\n      <description>In order to use Put.io you will need access token.<br />To obtain one please visit https://imanel.org/oitup and follow instructions visible on screen.</description>\n    </banner>\n    <textField>Access Token</textField>\n    <footer>\n      <button>\n        <text>Login</text>\n      </button>\n    </footer>\n  </formTemplate>\n</document>";
-  return new DOMParser().parseFromString(template, "application/xml");
-};
+  return (`
+    <listItemLockup id='${file.id}'>
+      <title>${file.name}</title>
+      <img src='${file.icon}' width='60' height='60' />
+      ${decorationImage}
+      <relatedContent>
+        <lockup>
+          <img src='${file.screenshot}' />
+          <description class='description'>${file.name}
+            ${(file.fileType === 'movie') ? "<br /><br />File Size: " + file.size : ""}
+          </description>
+        </lockup>
+      </relatedContent>
+    </listItemLockup>
+  `)
+}
+
+const emptyListItemTemplate = () => {
+  return (`
+    <listItemLockup>
+      <title>Folder is empty</title>
+    </listItemLockup>
+  `)
+}
+
+export const loadingTemplate = (title = 'Loading...') => {
+  const template = `<?xml version='1.0' encoding='UTF-8' ?>
+    <document>
+      <loadingTemplate>
+        <activityIndicator>
+          <title>${title}</title>
+        </activityIndicator>
+      </loadingTemplate>
+    </document>
+  `
+  return new DOMParser().parseFromString(template, "application/xml")
+}
+
+export const loginTemplate = () => {
+  const template = `<?xml version='1.0' encoding='UTF-8' ?>
+    <document>
+      <formTemplate>
+        <banner>
+          <title>Put.io Login</title>
+          <description>
+            In order to use Put.io you will need access token.
+            <br />
+            To obtain one please visit https://imanel.org/oitup and follow instructions visible on screen.
+          </description>
+        </banner>
+        <textField>Access Token</textField>
+        <footer>
+          <button>
+            <text>Login</text>
+          </button>
+        </footer>
+      </formTemplate>
+    </document>
+  `
+  return new DOMParser().parseFromString(template, "application/xml")
+}
