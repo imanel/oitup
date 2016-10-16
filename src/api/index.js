@@ -1,6 +1,6 @@
-import ErrorMessage from './components/ErrorMessage'
-import File from './file'
-import { login } from './utils'
+import ErrorMessage from '../components/ErrorMessage'
+import File from '../file'
+import { login } from '../utils'
 
 const baseURL = 'https://api.put.io/v2'
 
@@ -99,7 +99,7 @@ const setStartFrom = (fileId, time) => {
   return request.send('time=' + time);
 };
 
-export default {
+export {
   urlForMovie,
   downloadList,
   downloadMP4Status,

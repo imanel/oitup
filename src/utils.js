@@ -1,14 +1,14 @@
+import * as api from './api'
 import ItemList from './components/ItemList'
 import Loading from './components/Loading'
 import Login from './components/Login'
-import Downloader from './downloader'
 import File from './file'
 
 export const downloadList = function(listId) {
   var loadingDocument;
   loadingDocument = Loading();
   navigationDocument.pushDocument(loadingDocument);
-  return Downloader.downloadList(listId, function(header, files) {
+  return api.downloadList(listId, function(header, files) {
     var list;
     list = ItemList(header, files);
     list.addEventListener("select", selectFile);

@@ -1,4 +1,3 @@
-import Downloader from './downloader'
 import { downloadList } from './utils'
 
 App.onLaunch = function(options) {
