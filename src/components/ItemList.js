@@ -19,7 +19,7 @@ const ItemList = (title, files) => {
             tv-text-style: none;
             tv-text-max-lines: 7;
             font-size: 40;
-            color: rgba(100, 100, 100);
+            color: rgba(100, 100, 100, 1);
           }
         </style>
       </head>
