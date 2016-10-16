@@ -6,7 +6,7 @@ export const downloadList = function(listId) {
   var loadingDocument;
   loadingDocument = loadingTemplate();
   navigationDocument.pushDocument(loadingDocument);
-  return new Downloader().downloadList(listId, function(header, files) {
+  return Downloader.downloadList(listId, function(header, files) {
     var list;
     list = listTemplate(header, files);
     list.addEventListener("select", selectFile);
@@ -58,7 +58,7 @@ export const login = function() {
 export const handleLogin = function(tokenField) {
   var token;
   token = tokenField.getFeature('Keyboard').text;
-  userDefaults.setItem('putioAccessToken', token);
+  userDefaults.setData('putioAccessToken', token);
   navigationDocument.clear();
   return downloadList(null);
 };

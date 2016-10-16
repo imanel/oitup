@@ -32,7 +32,7 @@ class File {
   play() {
     var loadingDocument, player, video;
     if (this.isPlayable) {
-      video = new MediaItem('video', new Downloader().urlForMovie(this.id));
+      video = new MediaItem('video', Downloader.urlForMovie(this.id));
       video.title = this.name;
       video.artworkImageURL = this.screenshot;
       video.resumeTime = this.startFrom;
@@ -50,7 +50,7 @@ class File {
     } else {
       loadingDocument = loadingTemplate();
       navigationDocument.pushDocument(loadingDocument);
-      return new Downloader().downloadMP4Status(this.id, (function(_this) {
+      return Downloader.downloadMP4Status(this.id, (function(_this) {
         return function(response) {
           if (response.status === 'COMPLETED') {
             _this.isPlayable = true;
@@ -58,7 +58,7 @@ class File {
             return _this.play();
           } else {
             if (response.status === 'NOT_AVAILABLE') {
-              new Downloader().convertMP4(_this.id);
+              Downloader.convertMP4(_this.id);
             }
             return navigationDocument.replaceDocument(convertingTemplate(response.percent_done || 0), loadingDocument);
           }
@@ -69,7 +69,7 @@ class File {
 
   updateStartFrom(time) {
     this.startFrom = time;
-    return new Downloader().setStartFrom(this.id, time);
+    return Downloader.setStartFrom(this.id, time);
   };
 
   calculateSize(size) {
